@@ -1,20 +1,28 @@
 package agents;
 
+import agents.gui.ParkingManagerGUI;
 import jade.core.AID;
-import jade.core.Agent;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import jade.gui.GuiAgent;
+import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
 
-public class ParkingManagerAgent extends Agent {
+public class ParkingManagerAgent extends GuiAgent {
 
     private AID[] parkings;
 
+    private ParkingManagerGUI parkingManagerGUI;
+
     protected void setup() {
         System.out.println("Hello! Parking-agent " + getAID().getName() + " is ready.");
+
+        parkingManagerGUI = new ParkingManagerGUI(this);
+        parkingManagerGUI.setVisible(true);
 
         // Register the parking service in the yellow pages
         DFAgentDescription dfd = new DFAgentDescription();
@@ -66,6 +74,20 @@ public class ParkingManagerAgent extends Agent {
                 }
             }
         });
+
+        addBehaviour(new CyclicBehaviour() {
+            @Override
+            public void action() {
+                ACLMessage msg = myAgent.receive();
+                if (msg != null) {
+                    // Message received. Process it
+                    String msgContent = msg.getContent();
+                    System.out.println(this.getAgent().getLocalName() + " Otrzymalem wiadomosc: " + msgContent + " od " + msg.getSender().getLocalName());
+                } else {
+                    block();
+                }
+            }
+        });
     }
 
     protected void takeDown() {
@@ -80,4 +102,7 @@ public class ParkingManagerAgent extends Agent {
         System.out.println("Parking-agent " + getAID().getName() + " terminating.");
     }
 
+    protected void onGuiEvent(GuiEvent guiEvent) {
+
+    }
 }
