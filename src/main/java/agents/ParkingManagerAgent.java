@@ -12,17 +12,35 @@ import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
 
+import java.util.ArrayList;
+
 public class ParkingManagerAgent extends GuiAgent {
 
     private AID[] parkings;
 
     private ParkingManagerGUI parkingManagerGUI;
 
+    // model
+
+    private int capacity;
+
+    private int numOfOccupiedPlaces;
+
+    private ArrayList<Boolean> parkingPlaces;
+
+    private float price;
+
     protected void setup() {
-        System.out.println("Hello! Parking-agent " + getAID().getName() + " is ready.");
+
+        Object[] args = getArguments();
+        if (args != null) {
+            if (args.length > 0) this.capacity = (Integer) args[0];
+            if (args.length > 1) this.numOfOccupiedPlaces = (Integer) args[1];
+            if (args.length > 2) this.price = (Float) args[2];
+            System.out.println("Created ParkingManagerAgent " + getAID().getName() + " with capacity " + this.capacity + " liczba zajetych miejsc " + this.numOfOccupiedPlaces + " price " + this.price);
+        }
 
         parkingManagerGUI = new ParkingManagerGUI(this);
-        parkingManagerGUI.setVisible(true);
 
         // Register the parking service in the yellow pages
         DFAgentDescription dfd = new DFAgentDescription();
@@ -104,5 +122,17 @@ public class ParkingManagerAgent extends GuiAgent {
 
     protected void onGuiEvent(GuiEvent guiEvent) {
 
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public int getNumOfOccupiedPlaces() {
+        return numOfOccupiedPlaces;
+    }
+
+    public float getPrice() {
+        return price;
     }
 }
