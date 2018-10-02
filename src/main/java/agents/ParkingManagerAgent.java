@@ -30,6 +30,7 @@ public class ParkingManagerAgent extends GuiAgent {
 
     private float price;
 
+    @Override
     protected void setup() {
 
         Object[] args = getArguments();
@@ -108,6 +109,7 @@ public class ParkingManagerAgent extends GuiAgent {
         });
     }
 
+    @Override
     protected void takeDown() {
         // Deregister from the yellow pages
         try {

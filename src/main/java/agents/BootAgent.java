@@ -69,6 +69,24 @@ public class BootAgent extends Agent {
                     e.printStackTrace();
                 }
 
+                // new driver agent
+                try {
+                    Object[] args = {};
+                    ac = cc.createNewAgent("d0", "agents.DriverManagerAgent", args);
+                    ac.start();
+                } catch (StaleProxyException e) {
+                    e.printStackTrace();
+                }
+
+                // new driver agent
+                try {
+                    Object[] args = {};
+                    ac = cc.createNewAgent("d1", "agents.DriverManagerAgent", args);
+                    ac.start();
+                } catch (StaleProxyException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
     }

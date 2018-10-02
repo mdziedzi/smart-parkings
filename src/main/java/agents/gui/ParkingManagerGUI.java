@@ -8,25 +8,25 @@ import java.awt.event.ActionListener;
 
 public class ParkingManagerGUI extends JFrame implements ActionListener {
 
-    private ParkingManagerAgent myAgent;
+    private ParkingManagerAgent agent;
 
     private JPanel jPanel;
 
     public ParkingManagerGUI(ParkingManagerAgent parkingManagerAgent) {
 
-        myAgent = parkingManagerAgent;
+        this.agent = parkingManagerAgent;
 
         setSize(200, 200);
 
         jPanel = new JPanel();
 
-        jPanel.add(new JLabel("Num of total palces: " + myAgent.getCapacity()));
-        jPanel.add(new JLabel("Num of occupied palces: " + myAgent.getNumOfOccupiedPlaces()));
-        jPanel.add(new JLabel("Price: " + myAgent.getPrice()));
+        jPanel.add(new JLabel("Num of total palces: " + agent.getCapacity()));
+        jPanel.add(new JLabel("Num of occupied palces: " + agent.getNumOfOccupiedPlaces()));
+        jPanel.add(new JLabel("Price: " + agent.getPrice()));
 
         this.add(jPanel);
 
-        setTitle(myAgent.getLocalName());
+        setTitle(agent.getLocalName());
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
