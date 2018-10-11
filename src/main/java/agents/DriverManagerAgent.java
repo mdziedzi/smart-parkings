@@ -1,6 +1,9 @@
 package agents;
 
 import agents.gui.DriverManagerGUI;
+import agents.util.Localization;
+import jade.core.AID;
+import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -12,12 +15,18 @@ public class DriverManagerAgent extends GuiAgent {
 
     private DriverManagerGUI driverManagerGUI;
 
+    private Localization localization;
+
+    private AID choosenParking;
+
     @Override
     protected void setup() {
 
         Object[] args = getArguments();
         if (args != null) {
-            // todo
+            if (args.length > 0) this.localization = (Localization) args[0];
+            System.out.println("Created DriverManagerAgent " + getAID().getName() + " with lat: " + this.localization.getLatitude()
+                    + " lon: " + this.localization.getLongitude());
         }
 
         this.driverManagerGUI = new DriverManagerGUI(this);
@@ -35,8 +44,14 @@ public class DriverManagerAgent extends GuiAgent {
             fe.printStackTrace();
         }
 
+        this.addBehaviour(new ChooseParking());
 
     }
+
+    public Localization getLocalization() {
+        return localization;
+    }
+
 
     @Override
     protected void takeDown() {
@@ -54,5 +69,11 @@ public class DriverManagerAgent extends GuiAgent {
 
     protected void onGuiEvent(GuiEvent guiEvent) {
 
+    }
+
+    private class ChooseParking extends OneShotBehaviour {
+        public void action() {
+            //todo
+        }
     }
 }

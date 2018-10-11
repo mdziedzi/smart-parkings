@@ -24,6 +24,7 @@ public class BootAgent extends Agent {
                 ContainerController cc = getContainerController();
                 AgentController ac;
 
+                // produce ParkingManagerAgents
                 for (int i = 0; i < 5; i++) {
                     // new agent
                     try {
@@ -38,6 +39,20 @@ public class BootAgent extends Agent {
                         e.printStackTrace();
                     }
                 }
+
+                // proudce DriverManagerAgents
+                for (int i = 0; i < 5; i++) {
+                    // new agent
+                    try {
+                        Localization localization = generateLocalization();
+                        Object[] args = {localization};
+                        ac = cc.createNewAgent("d" + i, "agents.DriverManagerAgent", args);
+                        ac.start();
+                    } catch (StaleProxyException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }
         });
     }

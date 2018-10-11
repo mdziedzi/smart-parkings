@@ -18,13 +18,16 @@ public class DriverManagerGUI extends JFrame {
 
         this.jPanel = new JPanel();
 
+        jPanel.add(new JLabel("Lon: " + agent.getLocalization().getLongitude()));
+        jPanel.add(new JLabel("Lat: " + agent.getLocalization().getLatitude()));
+
         this.add(jPanel);
 
         setTitle(agent.getLocalName());
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setLocation(0, 250);
+        setLocation(0, 300);
 
         setVisible(true);
 
