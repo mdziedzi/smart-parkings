@@ -1,10 +1,13 @@
 package agents;
 
+import agents.util.Localization;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
+
+import java.util.Random;
 
 import static com.sun.activation.registries.LogSupport.log;
 
@@ -21,73 +24,47 @@ public class BootAgent extends Agent {
                 ContainerController cc = getContainerController();
                 AgentController ac;
 
-                // new agent
-                try {
-                    int capacity = 20;
-                    int numOfOccupiedPlaces = 10;
-                    float price = 2;
-                    Object[] args = {capacity, numOfOccupiedPlaces, price};
-                    ac = cc.createNewAgent("p0", "agents.ParkingManagerAgent", args);
-                    ac.start();
-                } catch (StaleProxyException e) {
-                    e.printStackTrace();
+                for (int i = 0; i < 5; i++) {
+                    // new agent
+                    try {
+                        int capacity = generateCapacity();
+                        int numOfOccupiedPlaces = generateNumOfOccupiedPlaces();
+                        double basePrice = generateBasePrice();
+                        Localization localization = generateLocalization();
+                        Object[] args = {capacity, numOfOccupiedPlaces, basePrice, localization};
+                        ac = cc.createNewAgent("p" + i, "agents.ParkingManagerAgent", args);
+                        ac.start();
+                    } catch (StaleProxyException e) {
+                        e.printStackTrace();
+                    }
                 }
-
-                // new agent
-                try {
-                    int capacity = 30;
-                    int numOfOccupiedPlaces = 12;
-                    float price = 3.2f;
-                    Object[] args = {capacity, numOfOccupiedPlaces, price};
-                    ac = cc.createNewAgent("p1", "agents.ParkingManagerAgent", args);
-                    ac.start();
-                } catch (StaleProxyException e) {
-                    e.printStackTrace();
-                }
-
-                // new agent
-                try {
-                    int capacity = 10;
-                    int numOfOccupiedPlaces = 8;
-                    float price = 1.2f;
-                    Object[] args = {capacity, numOfOccupiedPlaces, price};
-                    ac = cc.createNewAgent("p2", "agents.ParkingManagerAgent", args);
-                    ac.start();
-                } catch (StaleProxyException e) {
-                    e.printStackTrace();
-                }
-
-                // new agent
-                try {
-                    int capacity = 35;
-                    int numOfOccupiedPlaces = 26;
-                    float price = 2.5f;
-                    Object[] args = {capacity, numOfOccupiedPlaces, price};
-                    ac = cc.createNewAgent("p3", "agents.ParkingManagerAgent", args);
-                    ac.start();
-                } catch (StaleProxyException e) {
-                    e.printStackTrace();
-                }
-
-                // new driver agent
-                try {
-                    Object[] args = {};
-                    ac = cc.createNewAgent("d0", "agents.DriverManagerAgent", args);
-                    ac.start();
-                } catch (StaleProxyException e) {
-                    e.printStackTrace();
-                }
-
-                // new driver agent
-                try {
-                    Object[] args = {};
-                    ac = cc.createNewAgent("d1", "agents.DriverManagerAgent", args);
-                    ac.start();
-                } catch (StaleProxyException e) {
-                    e.printStackTrace();
-                }
-
             }
         });
+    }
+
+    private Localization generateLocalization() {
+        Random rand = new Random();
+        double lon = Math.floor(rand.nextDouble() * (100 - 0) * 1e2) / 1e2;
+        double lat = Math.floor(rand.nextDouble() * (100 - 0) * 1e2) / 1e2;
+        return new Localization(lon, lat);
+    }
+
+    private double generateBasePrice() {
+        Random rand = new Random();
+        // 10 - 30
+        return Math.floor(1 + rand.nextDouble() * (10 - 1) * 1e2) / 1e2;
+    }
+
+    // todo: delete
+    private int generateNumOfOccupiedPlaces() {
+        Random rand = new Random();
+        // 10 - 30
+        return rand.nextInt(31) + 10;
+    }
+
+    private int generateCapacity() {
+        Random rand = new Random();
+        // 10 - 30
+        return rand.nextInt(31) + 10;
     }
 }
