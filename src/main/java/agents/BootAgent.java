@@ -40,8 +40,15 @@ public class BootAgent extends Agent {
                     }
                 }
 
+                // wait for asynchronous producing of Parkings
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 // proudce DriverManagerAgents
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 20; i++) {
                     // new agent
                     try {
                         Localization localization = generateLocalization();
@@ -49,6 +56,13 @@ public class BootAgent extends Agent {
                         ac = cc.createNewAgent("d" + i, "agents.DriverManagerAgent", args);
                         ac.start();
                     } catch (StaleProxyException e) {
+                        e.printStackTrace();
+                    }
+
+                    // give some time
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
@@ -72,9 +86,7 @@ public class BootAgent extends Agent {
 
     // todo: delete
     private int generateNumOfOccupiedPlaces() {
-        Random rand = new Random();
-        // 10 - 30
-        return rand.nextInt(31) + 10;
+        return 0;
     }
 
     private int generateCapacity() {

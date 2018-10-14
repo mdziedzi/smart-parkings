@@ -6,13 +6,21 @@ import jade.content.ContentManager;
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
 import jade.content.onto.Ontology;
+import jade.content.onto.OntologyException;
 import jade.core.AID;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.NotUnderstoodException;
+import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import jade.domain.FIPANames;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
+import jade.proto.ContractNetResponder;
+import ontology.ProposedPrice;
 import ontology.SmartParkingsOntology;
 
 import java.util.ArrayList;
@@ -42,6 +50,10 @@ public class ParkingManagerAgent extends GuiAgent {
 
     @Override
     protected void setup() {
+
+        // Register language and ontology
+        getContentManager().registerLanguage(codec);
+        getContentManager().registerOntology(ontology);
 
         // set args
         Object[] args = getArguments();
@@ -78,68 +90,69 @@ public class ParkingManagerAgent extends GuiAgent {
             fe.printStackTrace();
         }
 
-//        addBehaviour(new TickerBehaviour(this, 10000) {
-//            @Override
-//            protected void onTick() {
-//                // Update list of parkings
-//                DFAgentDescription template = new DFAgentDescription();
-//                ServiceDescription serviceDescription = new ServiceDescription();
-//                serviceDescription.setType("parking-info");
-//                template.addServices(serviceDescription);
-//
-//                try {
-//                    DFAgentDescription[] result = DFService.search(myAgent, template);
-//                    parkings = new AID[result.length];
-//                    for (int i = 0; i < result.length; ++i) {
-//                        parkings[i] = result[i].getName();
-//                    }
-//
-//                    System.out.println("Parking-agent: " + getAID().getName() + "have found this parkings:");
-//                    for (AID aid : parkings) {
-//                        if (aid != this.myAgent.getAID()) {
-//                            System.out.println(aid.getName());
-//                        }
-//                    }
-//                    System.out.println();
-//
-//                    // sending msg
-//                    ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-//                    for (AID aid : parkings) {
-//                        msg.addReceiver(new AID(aid.getLocalName(), AID.ISLOCALNAME));
-//                    }
-//                    msg.setLanguage(codec.getName());
-//                    msg.setOntology(ontology.getName());
-//                    msg.setContent("My price is 2$");
-//                    send(msg);
-//
-//                } catch (FIPAException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//
-//        addBehaviour(new CyclicBehaviour() {
-//            @Override
-//            public void action() {
-//                ACLMessage msg = myAgent.receive();
-//                if (msg != null) {
-//                    if (!msg.getSender().getLocalName().equals(this.myAgent.getLocalName())) {
-//                        // Message received. Process it
-//                        String msgContent = msg.getContent();
-//                        System.out.println(this.getAgent().getLocalName() + " Otrzymalem wiadomosc: " + msgContent + " od " + msg.getSender().getLocalName());
-//                    }
-//                } else {
-//                    block();
-//                }
-//            }
-//        });
+        System.out.println("Agent " + getLocalName() + " waiting for CFP...");
+        MessageTemplate template = MessageTemplate.and(
+                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
+                MessageTemplate.MatchPerformative(ACLMessage.CFP));
 
+        addBehaviour(new ContractNetResponder(this, template) {
+            protected ACLMessage prepareResponse(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
+                System.out.println("Agent " + getLocalName() + ": CFP received from " + cfp.getSender().getName() + ". Action is " + cfp.getContent());
+//                int proposal = evaluateAction();
+                if (cfp.getContent() != null) { // todo
+                    // We provide a proposal
+                    System.out.println("Agent " + getLocalName() + ": Proposing " + price);
+                    ACLMessage proposePriceMsg = cfp.createReply();
+                    proposePriceMsg.setPerformative(ACLMessage.PROPOSE);
+//                    propose.setContent(String.valueOf(price));
+                    prepareProposePriceMsg(proposePriceMsg);
+                    return proposePriceMsg;
+                } else {
+                    // We refuse to provide a proposal
+                    System.out.println("Agent " + getLocalName() + ": Refuse");
+                    throw new RefuseException("evaluation-failed");
+                }
+            }
 
+            protected ACLMessage prepareResultNotification(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
+                System.out.println("Agent " + getLocalName() + ": Proposal accepted");
+                bookParkingPlace(accept);
+                System.out.println("Agent " + getLocalName() + ": Action successfully performed");
+                ACLMessage inform = accept.createReply();
+                inform.setPerformative(ACLMessage.INFORM);
+                return inform;
+            }
 
+            protected void handleRejectProposal(ACLMessage reject) {
+                System.out.println("Agent " + getLocalName() + ": Proposal rejected");
+            }
+        });
+    }
+
+    private void bookParkingPlace(ACLMessage accept) {
+        numOfOccupiedPlaces++;
+        calculatePrice();
+        parkingManagerGUI.refreshView();
+    }
+
+    private void prepareProposePriceMsg(ACLMessage msg) {
+        msg.setLanguage(codec.getName());
+        msg.setOntology(ontology.getName());
+
+        ProposedPrice proposedPrice = new ProposedPrice();
+        proposedPrice.setValue((float) price); // fixme
+        try {
+            getContentManager().fillContent(msg, proposedPrice);
+        } catch (Codec.CodecException e) {
+            e.printStackTrace();
+        } catch (OntologyException e) {
+            e.printStackTrace();
+        }
     }
 
     private void calculatePrice() {
         price = Math.floor(basePrice * numOfOccupiedPlaces / capacity * 1e2) / 1e2;
+//        price = basePrice;
     }
 
     @Override

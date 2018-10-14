@@ -14,4 +14,7 @@ public interface SmartParkingsVocabulary {
 
     String SPOKEN = "spoken";
     String SPOKEN_WHAT = "what";
+
+    String PROPOSED_PRICE = "proposedPrice";
+    String PROPOSED_PRICE_VALUE = "value";
 }

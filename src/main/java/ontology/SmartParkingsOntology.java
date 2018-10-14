@@ -28,6 +28,11 @@ public class SmartParkingsOntology extends Ontology implements SmartParkingsVoca
 
             ps = (PredicateSchema) getSchema(SPOKEN);
             ps.add(SPOKEN_WHAT, getSchema(BasicOntology.STRING));
+
+            add(new PredicateSchema(PROPOSED_PRICE), ProposedPrice.class);
+            ps = (PredicateSchema) getSchema(PROPOSED_PRICE);
+            ps.add(PROPOSED_PRICE_VALUE, getSchema(BasicOntology.FLOAT));
+
         } catch (OntologyException oe) {
             oe.printStackTrace();
         }
