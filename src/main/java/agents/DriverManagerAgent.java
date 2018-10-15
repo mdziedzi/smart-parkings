@@ -17,7 +17,7 @@ import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
 import jade.proto.ContractNetInitiator;
-import ontology.ProposedPrice;
+import ontology.ParkingOffer;
 import ontology.SmartParkingsOntology;
 
 import java.util.Date;
@@ -100,7 +100,7 @@ public class DriverManagerAgent extends GuiAgent {
         currentMessage.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
         // give 2s for reply
         currentMessage.setReplyByDate(new Date(System.currentTimeMillis() + 2000));
-        currentMessage.setContent("test msg");
+        currentMessage.setContent("Give my info about you, please.");
 
         addBehaviour(new ContractNetInitiator(this, currentMessage) {
 
@@ -130,7 +130,7 @@ public class DriverManagerAgent extends GuiAgent {
                     System.out.println("Timeout expired: missing " + (nResponders - responses.size()) + " responses");
                 }
                 // Evaluate proposals.
-                float bestProposal = Float.MAX_VALUE;
+                ParkingOffer bestProposal = null;
                 AID bestProposer = null;
                 ACLMessage accept = null;
 
@@ -155,12 +155,17 @@ public class DriverManagerAgent extends GuiAgent {
                             e1.printStackTrace();
                         }
 
-                        if (content instanceof ProposedPrice) {
-                            float proposal = ((ProposedPrice) content).getValue();
-                            if (isBetter(proposal, bestProposal)) {
-                                bestProposal = proposal;
-                                bestProposer = msg.getSender();
-                                accept = reply;
+                        if (content instanceof ParkingOffer) {
+                            ParkingOffer currProposal = (ParkingOffer) content;
+                            if (bestProposal == null) {
+                                bestProposal = currProposal;
+
+                                if (isBetter(currProposal, bestProposal)) {
+                                    System.out.println("best prop change");
+                                    bestProposal = currProposal;
+                                    bestProposer = msg.getSender();
+                                    accept = reply;
+                                }
                             }
                         } else {
                             System.out.println("err");
@@ -180,9 +185,25 @@ public class DriverManagerAgent extends GuiAgent {
         });
     }
 
-    private boolean isBetter(float proposal, float bestProposal) {
-        // choose the cheapest
-        return proposal < bestProposal;
+    // todo: replace this dummy decision algorithm
+    private boolean isBetter(ParkingOffer currProposal, ParkingOffer bestProposal) {
+        float proposalPrice = currProposal.getPrice();
+        float proposalLat = currProposal.getLat();
+        float proposalLon = currProposal.getLon();
+
+        float chosenPrice = bestProposal.getPrice();
+        float chosenLat = bestProposal.getLat();
+        float chosenLon = bestProposal.getLon();
+
+        double proposalDist = Math.sqrt(Math.pow(localization.getLatitude() - proposalLat, 2) + Math.pow(localization.getLongitude() - proposalLon, 2));
+        double chosenDist = Math.sqrt(Math.pow(localization.getLatitude() - chosenLat, 2) + Math.pow(localization.getLongitude() - chosenLon, 2));
+
+        // todo: find the right
+        double currProposalScore = 0.1 * proposalPrice + 0.001 * proposalDist;
+        double bestProposalScore = 0.1 * chosenPrice + 0.001 * chosenDist;
+
+        // the less is better
+        return currProposalScore <= bestProposalScore;
     }
 
     public Localization getLocalization() {

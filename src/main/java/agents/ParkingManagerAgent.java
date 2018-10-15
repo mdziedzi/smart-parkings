@@ -20,7 +20,7 @@ import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.ContractNetResponder;
-import ontology.ProposedPrice;
+import ontology.ParkingOffer;
 import ontology.SmartParkingsOntology;
 
 import java.util.ArrayList;
@@ -139,10 +139,12 @@ public class ParkingManagerAgent extends GuiAgent {
         msg.setLanguage(codec.getName());
         msg.setOntology(ontology.getName());
 
-        ProposedPrice proposedPrice = new ProposedPrice();
-        proposedPrice.setValue((float) price); // fixme
+        ParkingOffer parkingOffer = new ParkingOffer();
+        parkingOffer.setPrice((float) price);
+        parkingOffer.setLat((float) localization.getLatitude());
+        parkingOffer.setLon((float) localization.getLongitude());
         try {
-            getContentManager().fillContent(msg, proposedPrice);
+            getContentManager().fillContent(msg, parkingOffer);
         } catch (Codec.CodecException e) {
             e.printStackTrace();
         } catch (OntologyException e) {
@@ -151,7 +153,7 @@ public class ParkingManagerAgent extends GuiAgent {
     }
 
     private void calculatePrice() {
-        price = Math.floor(basePrice * numOfOccupiedPlaces / capacity * 1e2) / 1e2;
+        price = Math.floor(basePrice * numOfOccupiedPlaces / capacity * 1e2 + 0.2) / 1e2;
 //        price = basePrice;
     }
 

@@ -14,10 +14,12 @@ public class SmartParkingsOntology extends Ontology implements SmartParkingsVoca
     private SmartParkingsOntology() {
         super(ONTOLOGY_NAME, BasicOntology.getInstance(), new CFReflectiveIntrospector());
         try {
-            add(new PredicateSchema(PROPOSED_PRICE), ProposedPrice.class);
+            add(new PredicateSchema(PARKING_OFFER), ParkingOffer.class);
 
-            PredicateSchema ps = (PredicateSchema) getSchema(PROPOSED_PRICE);
-            ps.add(PROPOSED_PRICE_VALUE, getSchema(BasicOntology.FLOAT));
+            PredicateSchema ps = (PredicateSchema) getSchema(PARKING_OFFER);
+            ps.add(PARKING_OFFER_PRICE, getSchema(BasicOntology.FLOAT));
+            ps.add(PARKING_OFFER_LAT, getSchema(BasicOntology.FLOAT));
+            ps.add(PARKING_OFFER_LON, getSchema(BasicOntology.FLOAT));
         } catch (OntologyException oe) {
             oe.printStackTrace();
         }
