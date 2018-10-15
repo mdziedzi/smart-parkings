@@ -1,6 +1,7 @@
 package agents.gui;
 
 import agents.ParkingManagerAgent;
+import agents.util.WindowsCounter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,6 +50,9 @@ public class ParkingManagerGUI extends JFrame implements ActionListener {
         setTitle(agent.getLocalName());
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        setLocation(WindowsCounter.getInstance().getCounter() * 200, 0);
+        WindowsCounter.getInstance().increment();
 
         setVisible(true);
     }
