@@ -25,6 +25,9 @@ import ontology.SmartParkingsOntology;
 
 import java.util.ArrayList;
 
+import static agents.util.Constants.FLOOR_FACTOR;
+import static agents.util.Constants.MIN_PARKING_PRICE;
+
 public class ParkingManagerAgent extends GuiAgent {
 
     private AID[] parkings;
@@ -98,13 +101,11 @@ public class ParkingManagerAgent extends GuiAgent {
         addBehaviour(new ContractNetResponder(this, template) {
             protected ACLMessage prepareResponse(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
                 System.out.println("Agent " + getLocalName() + ": CFP received from " + cfp.getSender().getName() + ". Action is " + cfp.getContent());
-//                int proposal = evaluateAction();
                 if (cfp.getContent() != null) { // todo
                     // We provide a proposal
                     System.out.println("Agent " + getLocalName() + ": Proposing " + price);
                     ACLMessage proposePriceMsg = cfp.createReply();
                     proposePriceMsg.setPerformative(ACLMessage.PROPOSE);
-//                    propose.setContent(String.valueOf(price));
                     prepareProposePriceMsg(proposePriceMsg);
                     return proposePriceMsg;
                 } else {
@@ -115,12 +116,17 @@ public class ParkingManagerAgent extends GuiAgent {
             }
 
             protected ACLMessage prepareResultNotification(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
-                System.out.println("Agent " + getLocalName() + ": Proposal accepted");
-                bookParkingPlace(accept);
-                System.out.println("Agent " + getLocalName() + ": Action successfully performed");
-                ACLMessage inform = accept.createReply();
-                inform.setPerformative(ACLMessage.INFORM);
-                return inform;
+                ACLMessage reply = accept.createReply();
+                if (bookParkingPlace(accept)) {
+                    System.out.println("Agent " + getLocalName() + ": Proposal accepted");
+                    System.out.println("Agent " + getLocalName() + ": Action successfully performed");
+                    reply.setPerformative(ACLMessage.INFORM);
+                    return reply;
+                } else {
+                    reply.setPerformative(ACLMessage.REFUSE);
+                    return reply;
+                }
+
             }
 
             protected void handleRejectProposal(ACLMessage reject) {
@@ -129,10 +135,15 @@ public class ParkingManagerAgent extends GuiAgent {
         });
     }
 
-    private void bookParkingPlace(ACLMessage accept) {
-        numOfOccupiedPlaces++;
-        calculatePrice();
-        parkingManagerGUI.refreshView();
+    private boolean bookParkingPlace(ACLMessage accept) {
+        if (numOfOccupiedPlaces >= capacity) {
+            return false;
+        } else {
+            numOfOccupiedPlaces++;
+            calculatePrice();
+            parkingManagerGUI.refreshView();
+            return true;
+        }
     }
 
     private void prepareProposePriceMsg(ACLMessage msg) {
@@ -153,7 +164,7 @@ public class ParkingManagerAgent extends GuiAgent {
     }
 
     private void calculatePrice() {
-        price = Math.floor(basePrice * numOfOccupiedPlaces / capacity * 1e2 + 0.2) / 1e2;
+        price = Math.floor(basePrice * numOfOccupiedPlaces / capacity * FLOOR_FACTOR + MIN_PARKING_PRICE) / FLOOR_FACTOR;
 //        price = basePrice;
     }
 

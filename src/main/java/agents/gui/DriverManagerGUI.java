@@ -30,7 +30,5 @@ public class DriverManagerGUI extends JFrame {
         setLocation(0, 300);
 
         setVisible(true);
-
     }
-
 }
