@@ -24,6 +24,8 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import static agents.util.Constants.*;
+
 public class DriverManagerAgent extends GuiAgent {
 
     private DriverManagerGUI driverManagerGUI;
@@ -99,7 +101,7 @@ public class DriverManagerAgent extends GuiAgent {
 
         currentMessage.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
         // give 2s for reply
-        currentMessage.setReplyByDate(new Date(System.currentTimeMillis() + 2000));
+        currentMessage.setReplyByDate(new Date(System.currentTimeMillis() + TIMEOUT_WAITING_FOR_PARKING_REPLY));
         currentMessage.setContent("Give my info about you, please.");
 
         addBehaviour(new ContractNetInitiator(this, currentMessage) {
@@ -159,14 +161,14 @@ public class DriverManagerAgent extends GuiAgent {
                             ParkingOffer currProposal = (ParkingOffer) content;
                             if (bestProposal == null) {
                                 bestProposal = currProposal;
-
-                                if (isBetter(currProposal, bestProposal)) {
-                                    System.out.println("best prop change");
-                                    bestProposal = currProposal;
-                                    bestProposer = msg.getSender();
-                                    accept = reply;
-                                }
                             }
+
+                            if (isBetter(currProposal, bestProposal)) {
+                                bestProposal = currProposal;
+                                bestProposer = msg.getSender();
+                                accept = reply;
+                            }
+
                         } else {
                             System.out.println("err");
                         }
@@ -199,8 +201,8 @@ public class DriverManagerAgent extends GuiAgent {
         double chosenDist = Math.sqrt(Math.pow(localization.getLatitude() - chosenLat, 2) + Math.pow(localization.getLongitude() - chosenLon, 2));
 
         // todo: find the right
-        double currProposalScore = 0.1 * proposalPrice + 0.001 * proposalDist;
-        double bestProposalScore = 0.1 * chosenPrice + 0.001 * chosenDist;
+        double currProposalScore = PRICE_FACTOR * proposalPrice + DISTANCE_FACTOR * proposalDist;
+        double bestProposalScore = PRICE_FACTOR * chosenPrice + DISTANCE_FACTOR * chosenDist;
 
         // the less is better
         return currProposalScore <= bestProposalScore;

@@ -9,6 +9,7 @@ import jade.wrapper.StaleProxyException;
 
 import java.util.Random;
 
+import static agents.util.Constants.*;
 import static com.sun.activation.registries.LogSupport.log;
 
 public class BootAgent extends Agent {
@@ -25,7 +26,7 @@ public class BootAgent extends Agent {
                 AgentController ac;
 
                 // produce ParkingManagerAgents
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < N_GENERATED_PARKINGS; i++) {
                     // new agent
                     try {
                         int capacity = generateCapacity();
@@ -35,6 +36,12 @@ public class BootAgent extends Agent {
                         Object[] args = {capacity, numOfOccupiedPlaces, basePrice, localization};
                         ac = cc.createNewAgent("p" + i, "agents.ParkingManagerAgent", args);
                         ac.start();
+
+                        try {
+                            Thread.sleep(SLEEP_BEFORE_PARKINGS_PRODUCTION);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     } catch (StaleProxyException e) {
                         e.printStackTrace();
                     }
@@ -42,13 +49,13 @@ public class BootAgent extends Agent {
 
                 // wait for asynchronous producing of Parkings
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(SLEEP_BEFORE_DRIVERS_PRODUCTION);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
                 // proudce DriverManagerAgents
-                for (int i = 0; i < 20; i++) {
+                for (int i = 0; i < N_GENERATED_DRIVERS; i++) {
                     // new agent
                     try {
                         Localization localization = generateLocalization();
@@ -61,7 +68,7 @@ public class BootAgent extends Agent {
 
                     // give some time
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(SLEEP_BETWEEN_EACH_DRIVER_PRODUCTION);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -73,25 +80,24 @@ public class BootAgent extends Agent {
 
     private Localization generateLocalization() {
         Random rand = new Random();
-        double lon = Math.floor(rand.nextDouble() * (100 - 0) * 1e2) / 1e2;
-        double lat = Math.floor(rand.nextDouble() * (100 - 0) * 1e2) / 1e2;
+        double lon = Math.floor(rand.nextDouble() * (MAX_LONGITUDE - MIN_LONGITUDE) * FLOOR_FACTOR) / FLOOR_FACTOR;
+        double lat = Math.floor(rand.nextDouble() * (MAX_LATITUDE - MIN_LATITUDE) * FLOOR_FACTOR) / FLOOR_FACTOR;
         return new Localization(lon, lat);
     }
 
     private double generateBasePrice() {
         Random rand = new Random();
-        // 10 - 30
-        return Math.floor(1 + rand.nextDouble() * (10 - 1) * 1e2) / 1e2;
+        return Math.floor(MIN_BASE_PRICE + rand.nextDouble() * (MAX_BASE_PRICE - MIN_BASE_PRICE) * FLOOR_FACTOR) / FLOOR_FACTOR;
     }
 
     // todo: delete
     private int generateNumOfOccupiedPlaces() {
-        return 0;
+        return OCCUPIED_PLACES;
     }
 
     private int generateCapacity() {
-        Random rand = new Random();
-        // 10 - 30
-        return rand.nextInt(31) + 10;
+//        Random rand = new Random();
+//        return rand.nextInt(MAX_CAPACITY + 1) + MIN_CAPACITY;
+        return CAPACITY;
     }
 }
