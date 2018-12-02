@@ -47,32 +47,32 @@ public class BootAgent extends Agent {
                     }
                 }
 
-                // wait for asynchronous producing of Parkings
-                try {
-                    Thread.sleep(SLEEP_BEFORE_DRIVERS_PRODUCTION);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                // proudce DriverManagerAgents
-                for (int i = 0; i < N_GENERATED_DRIVERS; i++) {
-                    // new agent
-                    try {
-                        Localization localization = generateLocalization();
-                        Object[] args = {localization};
-                        ac = cc.createNewAgent("d" + i, "agents.DriverManagerAgent", args);
-                        ac.start();
-                    } catch (StaleProxyException e) {
-                        e.printStackTrace();
-                    }
-
-                    // give some time
-                    try {
-                        Thread.sleep(SLEEP_BETWEEN_EACH_DRIVER_PRODUCTION);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+//                // wait for asynchronous producing of Parkings
+//                try {
+//                    Thread.sleep(SLEEP_BEFORE_DRIVERS_PRODUCTION);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                // proudce DriverManagerAgents
+//                for (int i = 0; i < N_GENERATED_DRIVERS; i++) {
+//                    // new agent
+//                    try {
+//                        Localization localization = generateLocalization();
+//                        Object[] args = {localization};
+//                        ac = cc.createNewAgent("d" + i, "agents.DriverManagerAgent", args);
+//                        ac.start();
+//                    } catch (StaleProxyException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    // give some time
+//                    try {
+//                        Thread.sleep(SLEEP_BETWEEN_EACH_DRIVER_PRODUCTION);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
 
             }
         });
@@ -80,9 +80,9 @@ public class BootAgent extends Agent {
 
     private Localization generateLocalization() {
         Random rand = new Random();
-        double lon = Math.floor(rand.nextDouble() * (MAX_LONGITUDE - MIN_LONGITUDE) * FLOOR_FACTOR) / FLOOR_FACTOR;
-        double lat = Math.floor(rand.nextDouble() * (MAX_LATITUDE - MIN_LATITUDE) * FLOOR_FACTOR) / FLOOR_FACTOR;
-        return new Localization(lon, lat);
+        double lat = Math.floor(rand.nextDouble() * (MAX_LONGITUDE - MIN_LONGITUDE) * LOCALIZATION_FLOOR_FACTOR) / LOCALIZATION_FLOOR_FACTOR + MIN_LATITUDE;
+        double lon = Math.floor(rand.nextDouble() * (MAX_LATITUDE - MIN_LATITUDE) * LOCALIZATION_FLOOR_FACTOR) / LOCALIZATION_FLOOR_FACTOR + MIN_LONGITUDE;
+        return new Localization(lat, lon);
     }
 
     private double generateBasePrice() {

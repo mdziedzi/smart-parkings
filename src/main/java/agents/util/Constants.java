@@ -10,12 +10,15 @@ public final class Constants {
     public static int SLEEP_BEFORE_DRIVERS_PRODUCTION = 500;
     public static int SLEEP_BETWEEN_EACH_DRIVER_PRODUCTION = 1000;
 
-    public static int MAX_LATITUDE = 100;
-    public static int MAX_LONGITUDE = 100;
+
+    //    52.1915094; 21.0128345
+    public static double MAX_LATITUDE = 52.20952742;
+    public static double MAX_LONGITUDE = 21.03085252;
     public static int LONGITUDE = 0;
     public static int LATITUDE = 0;
-    public static int MIN_LATITUDE = 0;
-    public static int MIN_LONGITUDE = 0;
+    public static double MIN_LATITUDE = 52.17349138;
+    public static double MIN_LONGITUDE = 20.99481648;
+    public static double LOCALIZATION_FLOOR_FACTOR = 1e8;
 
     public static double FLOOR_FACTOR = 1e2;
 
