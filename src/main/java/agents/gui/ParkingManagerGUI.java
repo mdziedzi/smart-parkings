@@ -16,7 +16,6 @@ public class ParkingManagerGUI extends JFrame implements ActionListener {
 
     private JLabel numOfTotalPlaces;
     private JLabel numOfOccupiedPlaces;
-    private JLabel basePrice;
     private JLabel lon;
     private JLabel lat;
     private JLabel price;
@@ -31,14 +30,12 @@ public class ParkingManagerGUI extends JFrame implements ActionListener {
 
         numOfTotalPlaces = new JLabel("Num of total palces: " + agent.getCapacity());
         numOfOccupiedPlaces = new JLabel("Num of occupied palces: " + agent.getNumOfOccupiedPlaces());
-        basePrice = new JLabel("Base price: " + agent.getBasePrice());
         lon = new JLabel("Lon: " + agent.getLocalization().getLongitude());
         lat = new JLabel("Lat: " + agent.getLocalization().getLatitude());
         price = new JLabel("Price: " + agent.getPrice() + "$");
 
         jPanel.add(numOfTotalPlaces);
         jPanel.add(numOfOccupiedPlaces);
-        jPanel.add(basePrice);
         jPanel.add(lon);
         jPanel.add(lat);
         jPanel.add(price);

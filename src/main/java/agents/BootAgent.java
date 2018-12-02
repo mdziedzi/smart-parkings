@@ -6,6 +6,8 @@ import jade.core.behaviours.OneShotBehaviour;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
+import parking.ParkingDevices;
+import parking.ParkingDevicesImpl;
 
 import java.util.Random;
 
@@ -25,7 +27,7 @@ public class BootAgent extends Agent {
                 ContainerController cc = getContainerController();
                 AgentController ac;
 
-                // produce ParkingManagerAgents
+                // produce ParkingManagerAgents (Mutable price)
                 for (int i = 0; i < N_GENERATED_PARKINGS; i++) {
                     // new agent
                     try {
@@ -33,8 +35,34 @@ public class BootAgent extends Agent {
                         int numOfOccupiedPlaces = generateNumOfOccupiedPlaces();
                         double basePrice = generateBasePrice();
                         Localization localization = generateLocalization();
-                        Object[] args = {capacity, numOfOccupiedPlaces, basePrice, localization};
-                        ac = cc.createNewAgent("p" + i, "agents.ParkingManagerAgent", args);
+                        ParkingDevices parkingDevices = new ParkingDevicesImpl(capacity, numOfOccupiedPlaces, localization);
+                        PriceAlgorithm priceAlgorithm = new PriceAlgorithmMutable();
+                        Object[] args = {parkingDevices, priceAlgorithm};
+                        ac = cc.createNewAgent("pmp" + i, "agents.ParkingManagerAgent", args);
+                        ac.start();
+
+                        try {
+                            Thread.sleep(SLEEP_BEFORE_PARKINGS_PRODUCTION);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    } catch (StaleProxyException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // produce ParkingManagerAgents (Constant price)
+                for (int i = 0; i < N_GENERATED_PARKINGS; i++) {
+                    // new agent
+                    try {
+                        int capacity = generateCapacity();
+                        int numOfOccupiedPlaces = generateNumOfOccupiedPlaces();
+                        double basePrice = generateBasePrice();
+                        Localization localization = generateLocalization();
+                        ParkingDevices parkingDevices = new ParkingDevicesImpl(capacity, numOfOccupiedPlaces, localization);
+                        PriceAlgorithm priceAlgorithm = new PriceAlgorithmConstant();
+                        Object[] args = {parkingDevices, priceAlgorithm};
+                        ac = cc.createNewAgent("pcp" + i, "agents.ParkingManagerAgent", args);
                         ac.start();
 
                         try {

@@ -22,11 +22,7 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.ContractNetResponder;
 import ontology.ParkingOffer;
 import ontology.SmartParkingsOntology;
-
-import java.util.ArrayList;
-
-import static agents.util.Constants.FLOOR_FACTOR;
-import static agents.util.Constants.MIN_PARKING_PRICE;
+import parking.ParkingDevices;
 
 public class ParkingManagerAgent extends GuiAgent {
 
@@ -43,13 +39,12 @@ public class ParkingManagerAgent extends GuiAgent {
 
     private int numOfOccupiedPlaces;
 
-    private ArrayList<Boolean> parkingPlaces;
-
     private double price;
 
-    private double basePrice;
-
     private Localization localization;
+
+    private ParkingDevices parkingDevices;
+    private PriceAlgorithm priceAlgorithm;
 
     @Override
     protected void setup() {
@@ -59,18 +54,30 @@ public class ParkingManagerAgent extends GuiAgent {
         getContentManager().registerOntology(ontology);
 
         // set args
+//        Object[] args = getArguments();
+//        if (args != null) {
+//            if (args.length > 0) this.capacity = (Integer) args[0];
+//            if (args.length > 1) this.numOfOccupiedPlaces = (Integer) args[1];
+//            if (args.length > 2) this.basePrice = (Double) args[2];
+//            if (args.length > 3) this.localization = (Localization) args[3];
+//            System.out.println("Created ParkingManagerAgent " + getAID().getName() + " with capacity " + this.capacity
+//                    + " liczba zajetych miejsc " + this.numOfOccupiedPlaces + " base price " + this.basePrice
+//                    + " lat: " + this.localization.getLatitude() + " lon: " + this.localization.getLongitude());
+//        }
         Object[] args = getArguments();
         if (args != null) {
-            if (args.length > 0) this.capacity = (Integer) args[0];
-            if (args.length > 1) this.numOfOccupiedPlaces = (Integer) args[1];
-            if (args.length > 2) this.basePrice = (Double) args[2];
-            if (args.length > 3) this.localization = (Localization) args[3];
-            System.out.println("Created ParkingManagerAgent " + getAID().getName() + " with capacity " + this.capacity
-                    + " liczba zajetych miejsc " + this.numOfOccupiedPlaces + " base price " + this.basePrice
-                    + " lat: " + this.localization.getLatitude() + " lon: " + this.localization.getLongitude());
+            if (args.length > 0) {
+                this.parkingDevices = (ParkingDevices) args[0];
+                this.capacity = parkingDevices.getCapacity();
+                this.numOfOccupiedPlaces = parkingDevices.getNumOfOccupiedPlaces();
+                this.localization = parkingDevices.getLocalization();
+            }
+            if (args.length > 1) {
+                this.priceAlgorithm = (PriceAlgorithm) args[1];
+            }
         }
 
-        calculatePrice();
+        price = priceAlgorithm.calculatePrice(numOfOccupiedPlaces, capacity);
 
         // Register language and ontology
         ContentManager contentManager = getContentManager();
@@ -140,7 +147,7 @@ public class ParkingManagerAgent extends GuiAgent {
             return false;
         } else {
             numOfOccupiedPlaces++;
-            calculatePrice();
+            price = priceAlgorithm.calculatePrice(numOfOccupiedPlaces, capacity);
             parkingManagerGUI.refreshView();
             return true;
         }
@@ -161,11 +168,6 @@ public class ParkingManagerAgent extends GuiAgent {
         } catch (OntologyException e) {
             e.printStackTrace();
         }
-    }
-
-    private void calculatePrice() {
-        price = Math.floor(basePrice * numOfOccupiedPlaces / capacity * FLOOR_FACTOR + MIN_PARKING_PRICE) / FLOOR_FACTOR;
-//        price = basePrice;
     }
 
     @Override
@@ -195,10 +197,6 @@ public class ParkingManagerAgent extends GuiAgent {
 
     public double getPrice() {
         return price;
-    }
-
-    public double getBasePrice() {
-        return basePrice;
     }
 
     public Localization getLocalization() {

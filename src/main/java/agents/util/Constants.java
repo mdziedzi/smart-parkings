@@ -25,6 +25,7 @@ public final class Constants {
     public static int MAX_BASE_PRICE = 10;
     public static int MIN_BASE_PRICE = 1;
     public static int BASE_PRICE = 1;
+    public static int STARTING_PRICE = 1;
 
     public static int MIN_CAPACITY = 10;
     public static int MAX_CAPACITY = 1;
