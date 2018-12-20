@@ -1,4 +1,4 @@
-package agents.util;
+package parking_manager_agent.util;
 
 public class Localization {
 

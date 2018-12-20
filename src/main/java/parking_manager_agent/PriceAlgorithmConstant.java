@@ -1,6 +1,6 @@
-package agents;
+package parking_manager_agent;
 
-import static agents.util.Constants.BASE_PRICE;
+import static parking_manager_agent.util.Constants.BASE_PRICE;
 
 public class PriceAlgorithmConstant implements PriceAlgorithm {
     @Override

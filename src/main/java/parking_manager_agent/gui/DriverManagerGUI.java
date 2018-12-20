@@ -1,6 +1,6 @@
-package agents.gui;
+package parking_manager_agent.gui;
 
-import agents.DriverManagerAgent;
+import util_agents.DriverManagerAgent;
 
 import javax.swing.*;
 

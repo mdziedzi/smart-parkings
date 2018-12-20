@@ -1,7 +1,7 @@
-package agents.gui;
+package parking_manager_agent.gui;
 
-import agents.ParkingManagerAgent;
-import agents.util.WindowsCounter;
+import parking_manager_agent.ParkingManagerAgent;
+import parking_manager_agent.util.WindowsCounter;
 
 import javax.swing.*;
 import java.awt.*;

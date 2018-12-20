@@ -1,4 +1,4 @@
-package agents;
+package parking_manager_agent;
 
 public interface PriceAlgorithm {
 

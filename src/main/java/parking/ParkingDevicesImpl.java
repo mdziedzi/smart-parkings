@@ -1,6 +1,6 @@
 package parking;
 
-import agents.util.Localization;
+import parking_manager_agent.util.Localization;
 
 public class ParkingDevicesImpl implements ParkingDevices {
 

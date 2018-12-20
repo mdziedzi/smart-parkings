@@ -1,7 +1,5 @@
-package agents;
+package util_agents;
 
-import agents.gui.DriverManagerGUI;
-import agents.util.Localization;
 import jade.content.ContentElement;
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
@@ -19,12 +17,14 @@ import jade.lang.acl.ACLMessage;
 import jade.proto.ContractNetInitiator;
 import ontology.ParkingOffer;
 import ontology.SmartParkingsOntology;
+import parking_manager_agent.gui.DriverManagerGUI;
+import parking_manager_agent.util.Localization;
 
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import static agents.util.Constants.*;
+import static parking_manager_agent.util.Constants.*;
 
 public class DriverManagerAgent extends GuiAgent {
 
@@ -87,7 +87,7 @@ public class DriverManagerAgent extends GuiAgent {
             aviableParkings[i] = result[i].getName();
         }
 
-        System.out.println("Driver-agent: " + getAID().getName() + "have found this parkings:");
+        System.out.println("Driver-parking_manager_agent: " + getAID().getName() + "have found this parkings:");
         for (AID aid : aviableParkings) {
             System.out.println(aid.getName());
         }
@@ -122,7 +122,7 @@ public class DriverManagerAgent extends GuiAgent {
                 } else {
                     System.out.println("Agent " + failure.getSender().getName() + " failed");
                 }
-                // Immediate failure --> we will not receive a response from this agent
+                // Immediate failure --> we will not receive a response from this parking_manager_agent
                 nResponders--;
             }
 
@@ -223,7 +223,7 @@ public class DriverManagerAgent extends GuiAgent {
         }
 
         // Printout a dismissal message
-        System.out.println("Driver-agent " + getAID().getName() + " terminating.");
+        System.out.println("Driver-parking_manager_agent " + getAID().getName() + " terminating.");
     }
 
     protected void onGuiEvent(GuiEvent guiEvent) {
