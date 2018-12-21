@@ -2,7 +2,6 @@ package parking_manager_agent;
 
 import exceptions.EffectorsConnectionFailure;
 import exceptions.SensorsConnectionFailure;
-import jade.content.ContentManager;
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
 import jade.content.onto.Ontology;
@@ -25,7 +24,6 @@ import parking_manager_agent.behaviours.Informator.InformatorRole;
 import parking_manager_agent.behaviours.ParkingMarketMonitor.ParkingMarketMonitorRole;
 import parking_manager_agent.behaviours.ParkingPlacesAdministrator.ParkingPlacesAdministratorRole;
 import parking_manager_agent.behaviours.PriceDecisionMakerRole.PriceDecisionMakerRole;
-import parking_manager_agent.util.Localization;
 
 public class ParkingManagerAgent extends GuiAgent {
 
@@ -65,12 +63,9 @@ public class ParkingManagerAgent extends GuiAgent {
 
         this.dataRepisitory = initParkingData();
 
-        price = priceAlgorithm.calculatePrice(numOfOccupiedPlaces, capacity);
+        this.dataRepisitory.setPriceInDollars(priceAlgorithm.calculatePrice(dataRepisitory.getnOccupiedPlaces(),
+                dataRepisitory.getCapacity()));
 
-        // Register language and ontology
-        ContentManager contentManager = getContentManager();
-        contentManager.registerLanguage(codec);
-        contentManager.registerOntology(ontology);
 
         // init GUI
 //        parkingManagerGUI = new ParkingManagerGUI(this);
@@ -223,19 +218,7 @@ public class ParkingManagerAgent extends GuiAgent {
 
     }
 
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public int getNumOfOccupiedPlaces() {
-        return numOfOccupiedPlaces;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public Localization getLocalization() {
-        return localization;
+    public ParkingAgentDataRepository getDataRepisitory() {
+        return dataRepisitory;
     }
 }

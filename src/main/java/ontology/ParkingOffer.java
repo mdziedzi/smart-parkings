@@ -4,6 +4,8 @@ import jade.content.AgentAction;
 
 public class ParkingOffer implements AgentAction {
 
+    //todo: add parking and agents IDs
+
     private float price;
 
     private float lat;
