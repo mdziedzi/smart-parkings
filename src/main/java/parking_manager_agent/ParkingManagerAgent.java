@@ -1,5 +1,7 @@
 package parking_manager_agent;
 
+import exceptions.EffectorsConnectionFailure;
+import exceptions.SensorsConnectionFailure;
 import jade.content.ContentManager;
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
@@ -16,7 +18,9 @@ import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
 import ontology.ParkingOffer;
 import ontology.SmartParkingsOntology;
-import parking.ParkingDevices;
+import parking_devices.ConnectionCallback;
+import parking_devices.EfectorsInterface;
+import parking_devices.SensorsInterface;
 import parking_manager_agent.behaviours.Informator.InformatorRole;
 import parking_manager_agent.behaviours.ParkingMarketMonitor.ParkingMarketMonitorRole;
 import parking_manager_agent.behaviours.ParkingPlacesAdministrator.ParkingPlacesAdministratorRole;
@@ -33,16 +37,11 @@ public class ParkingManagerAgent extends GuiAgent {
     private Ontology ontology = SmartParkingsOntology.getInstance();
 
     // model
+    private ParkingAgentDataRepository dataRepisitory;
 
-    private int capacity;
+    private SensorsInterface sensorsInterface;
+    private EfectorsInterface efectorsInterface;
 
-    private int numOfOccupiedPlaces;
-
-    private double price;
-
-    private Localization localization;
-
-    private ParkingDevices parkingDevices;
     private PriceAlgorithm priceAlgorithm;
 
     @Override
@@ -53,28 +52,18 @@ public class ParkingManagerAgent extends GuiAgent {
         getContentManager().registerOntology(ontology);
 
         // set args
-//        Object[] args = getArguments();
-//        if (args != null) {
-//            if (args.length > 0) this.capacity = (Integer) args[0];
-//            if (args.length > 1) this.numOfOccupiedPlaces = (Integer) args[1];
-//            if (args.length > 2) this.basePrice = (Double) args[2];
-//            if (args.length > 3) this.localization = (Localization) args[3];
-//            System.out.println("Created ParkingManagerAgent " + getAID().getName() + " with capacity " + this.capacity
-//                    + " liczba zajetych miejsc " + this.numOfOccupiedPlaces + " base price " + this.basePrice
-//                    + " lat: " + this.localization.getLatitude() + " lon: " + this.localization.getLongitude());
-//        }
         Object[] args = getArguments();
         if (args != null) {
-            if (args.length > 0) {
-                this.parkingDevices = (ParkingDevices) args[0];
-                this.capacity = parkingDevices.getCapacity();
-                this.numOfOccupiedPlaces = parkingDevices.getNumOfOccupiedPlaces();
-                this.localization = parkingDevices.getLocalization();
-            }
             if (args.length > 1) {
-                this.priceAlgorithm = (PriceAlgorithm) args[1];
+                this.sensorsInterface = (SensorsInterface) args[0];
+                this.efectorsInterface = (EfectorsInterface) args[1];
+            }
+            if (args.length > 2) {
+                this.priceAlgorithm = (PriceAlgorithm) args[2];
             }
         }
+
+        this.dataRepisitory = initParkingData();
 
         price = priceAlgorithm.calculatePrice(numOfOccupiedPlaces, capacity);
 
@@ -145,6 +134,48 @@ public class ParkingManagerAgent extends GuiAgent {
 //                System.out.println("Agent " + getLocalName() + ": Proposal rejected");
 //            }
 //        });
+    }
+
+    private ParkingAgentDataRepository initParkingData() {
+        checkSensorsConnection();
+        checkEffectorsConnection();
+        return new ParkingAgentDataRepository(
+                sensorsInterface.getCapacity(),
+                sensorsInterface.getNOccupiedPlaces(),
+                sensorsInterface.getPriceInDollars(),
+                sensorsInterface.getLocalization());
+
+    }
+
+    private void checkEffectorsConnection() {
+        efectorsInterface.checkConnection(new ConnectionCallback() {
+
+            @Override
+            public void onConnectionSuccess() {
+                //do nothing
+            }
+
+            @Override
+            public void onConnectionFailure() throws EffectorsConnectionFailure {
+                throw new EffectorsConnectionFailure();
+            }
+        });
+    }
+
+    private void checkSensorsConnection() {
+        sensorsInterface.checkConnection(new ConnectionCallback() {
+            @Override
+            public void onConnectionSuccess() {
+                //do nothing
+            }
+
+            @Override
+            public void onConnectionFailure() throws SensorsConnectionFailure {
+                throw new SensorsConnectionFailure();
+            }
+        });
+
+
     }
 
     private boolean bookParkingPlace(ACLMessage accept) {
