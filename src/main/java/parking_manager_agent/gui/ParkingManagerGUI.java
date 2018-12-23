@@ -28,11 +28,11 @@ public class ParkingManagerGUI extends JFrame implements ActionListener {
 
         jPanel = new JPanel();
 
-        numOfTotalPlaces = new JLabel("Num of total palces: " + agent.getCapacity());
-        numOfOccupiedPlaces = new JLabel("Num of occupied palces: " + agent.getNumOfOccupiedPlaces());
-        lon = new JLabel("Lon: " + agent.getLocalization().getLongitude());
-        lat = new JLabel("Lat: " + agent.getLocalization().getLatitude());
-        price = new JLabel("Price: " + agent.getPrice() + "$");
+        numOfTotalPlaces = new JLabel("Num of total palces: " + agent.getDataRepository().getCapacity());
+        numOfOccupiedPlaces = new JLabel("Num of occupied palces: " + agent.getDataRepository().getnOccupiedPlaces());
+        lon = new JLabel("Lon: " + agent.getDataRepository().getLocalization().getLongitude());
+        lat = new JLabel("Lat: " + agent.getDataRepository().getLocalization().getLatitude());
+        price = new JLabel("Price: " + agent.getDataRepository().getPriceInDollars() + "$");
 
         jPanel.add(numOfTotalPlaces);
         jPanel.add(numOfOccupiedPlaces);
@@ -59,7 +59,7 @@ public class ParkingManagerGUI extends JFrame implements ActionListener {
     }
 
     public void refreshView() {
-        numOfOccupiedPlaces.setText("Num of occupied palces: " + String.valueOf(this.agent.getNumOfOccupiedPlaces()));
-        price.setText("Price: " + String.valueOf(agent.getPrice()) + "$");
+        numOfOccupiedPlaces.setText("Num of occupied palces: " + String.valueOf(this.agent.getDataRepository().getnOccupiedPlaces()));
+        price.setText("Price: " + String.valueOf(agent.getDataRepository().getPriceInDollars()) + "$");
     }
 }

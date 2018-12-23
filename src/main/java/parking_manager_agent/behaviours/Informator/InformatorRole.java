@@ -12,9 +12,9 @@ public class InformatorRole extends ParallelBehaviour {
     }
 
     private void initDataStore(ParkingManagerAgent a) {
-        getDataStore().put("price_in_dollars", a.getDataRepisitory().getPriceInDollars());
-        getDataStore().put("lat", a.getDataRepisitory().getLocalization().getLatitude());
-        getDataStore().put("lon", a.getDataRepisitory().getLocalization().getLongitude());
+        getDataStore().put("price_in_dollars", a.getDataRepository().getPriceInDollars());
+        getDataStore().put("lat", a.getDataRepository().getLocalization().getLatitude());
+        getDataStore().put("lon", a.getDataRepository().getLocalization().getLongitude());
     }
 
     //todo: update data store

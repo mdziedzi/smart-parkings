@@ -5,12 +5,13 @@ import jade.core.behaviours.OneShotBehaviour;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-import parking.ParkingDevices;
-import parking.ParkingDevicesImpl;
-import parking_manager_agent.PriceAlgorithm;
-import parking_manager_agent.PriceAlgorithmConstant;
-import parking_manager_agent.PriceAlgorithmMutable;
+import parking_devices.effectors.EffectorsInterface;
+import parking_devices.effectors.EffectorsInterfaceFactory;
+import parking_devices.sensors.SensorsInterface;
+import parking_devices.sensors.SensorsInterfaceFactory;
 import parking_manager_agent.util.Localization;
+import price_algorithm.PriceAlgorithm;
+import price_algorithm.PriceAlgorithmFactory;
 
 import java.util.Random;
 
@@ -34,13 +35,7 @@ public class BootAgent extends Agent {
                 for (int i = 0; i < N_GENERATED_PARKINGS; i++) {
                     // new parking_manager_agent
                     try {
-                        int capacity = generateCapacity();
-                        int numOfOccupiedPlaces = generateNumOfOccupiedPlaces();
-                        double basePrice = generateBasePrice();
-                        Localization localization = generateLocalization();
-                        ParkingDevices parkingDevices = new ParkingDevicesImpl(capacity, numOfOccupiedPlaces, localization);
-                        PriceAlgorithm priceAlgorithm = new PriceAlgorithmMutable();
-                        Object[] args = {parkingDevices, priceAlgorithm};
+                        Object[] args = produceAgentArgs("mutable", "default", "default");
                         ac = cc.createNewAgent("pmp" + i, "parking_manager_agent.ParkingManagerAgent", args);
                         ac.start();
 
@@ -58,13 +53,7 @@ public class BootAgent extends Agent {
                 for (int i = 0; i < N_GENERATED_PARKINGS; i++) {
                     // new parking_manager_agent
                     try {
-                        int capacity = generateCapacity();
-                        int numOfOccupiedPlaces = generateNumOfOccupiedPlaces();
-                        double basePrice = generateBasePrice();
-                        Localization localization = generateLocalization();
-                        ParkingDevices parkingDevices = new ParkingDevicesImpl(capacity, numOfOccupiedPlaces, localization);
-                        PriceAlgorithm priceAlgorithm = new PriceAlgorithmConstant();
-                        Object[] args = {parkingDevices, priceAlgorithm};
+                        Object[] args = produceAgentArgs("const", "default", "default");
                         ac = cc.createNewAgent("pcp" + i, "parking_manager_agent.ParkingManagerAgent", args);
                         ac.start();
 
@@ -107,6 +96,19 @@ public class BootAgent extends Agent {
 
             }
         });
+    }
+
+    private Object[] produceAgentArgs(String priceAlgorithmType, String sensorsInterfaceType, String effectorsInterfaceType) {
+        int capacity = generateCapacity();
+        int numOfOccupiedPlaces = generateNumOfOccupiedPlaces();
+        double basePrice = generateBasePrice();
+        Localization localization = generateLocalization();
+
+        SensorsInterface sensorsInterface = SensorsInterfaceFactory.getSensorsInterface(sensorsInterfaceType, capacity, numOfOccupiedPlaces, basePrice, localization);
+        EffectorsInterface effectorsInterface = EffectorsInterfaceFactory.getEffectorsInterface(effectorsInterfaceType);
+        PriceAlgorithm priceAlgorithm = PriceAlgorithmFactory.getPriceAlgorithm(priceAlgorithmType);
+
+        return new Object[]{sensorsInterface, effectorsInterface, priceAlgorithm};
     }
 
     private Localization generateLocalization() {

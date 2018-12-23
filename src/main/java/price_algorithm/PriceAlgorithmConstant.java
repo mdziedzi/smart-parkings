@@ -1,4 +1,4 @@
-package parking_manager_agent;
+package price_algorithm;
 
 import static parking_manager_agent.util.Constants.BASE_PRICE;
 

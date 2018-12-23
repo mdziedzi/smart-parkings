@@ -5,7 +5,6 @@ import exceptions.SensorsConnectionFailure;
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
 import jade.content.onto.Ontology;
-import jade.content.onto.OntologyException;
 import jade.core.AID;
 import jade.core.behaviours.ParallelBehaviour;
 import jade.domain.DFService;
@@ -14,16 +13,13 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
-import jade.lang.acl.ACLMessage;
-import ontology.ParkingOffer;
 import ontology.SmartParkingsOntology;
 import parking_devices.ConnectionCallback;
-import parking_devices.EfectorsInterface;
-import parking_devices.SensorsInterface;
+import parking_devices.effectors.EffectorsInterface;
+import parking_devices.sensors.SensorsInterface;
 import parking_manager_agent.behaviours.Informator.InformatorRole;
-import parking_manager_agent.behaviours.ParkingMarketMonitor.ParkingMarketMonitorRole;
 import parking_manager_agent.behaviours.ParkingPlacesAdministrator.ParkingPlacesAdministratorRole;
-import parking_manager_agent.behaviours.PriceDecisionMakerRole.PriceDecisionMakerRole;
+import price_algorithm.PriceAlgorithm;
 
 public class ParkingManagerAgent extends GuiAgent {
 
@@ -38,7 +34,7 @@ public class ParkingManagerAgent extends GuiAgent {
     private ParkingAgentDataRepository dataRepisitory;
 
     private SensorsInterface sensorsInterface;
-    private EfectorsInterface efectorsInterface;
+    private EffectorsInterface effectorsInterface;
 
     private PriceAlgorithm priceAlgorithm;
 
@@ -54,7 +50,7 @@ public class ParkingManagerAgent extends GuiAgent {
         if (args != null) {
             if (args.length > 1) {
                 this.sensorsInterface = (SensorsInterface) args[0];
-                this.efectorsInterface = (EfectorsInterface) args[1];
+                this.effectorsInterface = (EffectorsInterface) args[1];
             }
             if (args.length > 2) {
                 this.priceAlgorithm = (PriceAlgorithm) args[2];
@@ -85,8 +81,8 @@ public class ParkingManagerAgent extends GuiAgent {
 
         addBehaviour(new InformatorRole(this, ParallelBehaviour.WHEN_ALL));
         addBehaviour(new ParkingPlacesAdministratorRole(this, ParallelBehaviour.WHEN_ALL));
-        addBehaviour(new ParkingMarketMonitorRole(this, ParallelBehaviour.WHEN_ALL));
-        addBehaviour(new PriceDecisionMakerRole(this, ParallelBehaviour.WHEN_ALL));
+//        addBehaviour(new ParkingMarketMonitorRole(this, ParallelBehaviour.WHEN_ALL));
+//        addBehaviour(new PriceDecisionMakerRole(this, ParallelBehaviour.WHEN_ALL));
 
 
 //        System.out.println("Agent " + getLocalName() + " waiting for CFP...");
@@ -143,7 +139,7 @@ public class ParkingManagerAgent extends GuiAgent {
     }
 
     private void checkEffectorsConnection() {
-        efectorsInterface.checkConnection(new ConnectionCallback() {
+        effectorsInterface.checkConnection(new ConnectionCallback() {
 
             @Override
             public void onConnectionSuccess() {
@@ -173,33 +169,33 @@ public class ParkingManagerAgent extends GuiAgent {
 
     }
 
-    private boolean bookParkingPlace(ACLMessage accept) {
-        if (numOfOccupiedPlaces >= capacity) {
-            return false;
-        } else {
-            numOfOccupiedPlaces++;
-            price = priceAlgorithm.calculatePrice(numOfOccupiedPlaces, capacity);
-//            parkingManagerGUI.refreshView();
-            return true;
-        }
-    }
+//    private boolean bookParkingPlace(ACLMessage accept) {
+//        if (numOfOccupiedPlaces >= capacity) {
+//            return false;
+//        } else {
+//            numOfOccupiedPlaces++;
+//            price = priceAlgorithm.calculatePrice(numOfOccupiedPlaces, capacity);
+////            parkingManagerGUI.refreshView();
+//            return true;
+//        }
+//    }
 
-    private void prepareProposePriceMsg(ACLMessage msg) {
-        msg.setLanguage(codec.getName());
-        msg.setOntology(ontology.getName());
-
-        ParkingOffer parkingOffer = new ParkingOffer();
-        parkingOffer.setPrice((float) price);
-        parkingOffer.setLat((float) localization.getLatitude());
-        parkingOffer.setLon((float) localization.getLongitude());
-        try {
-            getContentManager().fillContent(msg, parkingOffer);
-        } catch (Codec.CodecException e) {
-            e.printStackTrace();
-        } catch (OntologyException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void prepareProposePriceMsg(ACLMessage msg) {
+//        msg.setLanguage(codec.getName());
+//        msg.setOntology(ontology.getName());
+//
+//        ParkingOffer parkingOffer = new ParkingOffer();
+//        parkingOffer.setPrice((float) price);
+//        parkingOffer.setLat((float) localization.getLatitude());
+//        parkingOffer.setLon((float) localization.getLongitude());
+//        try {
+//            getContentManager().fillContent(msg, parkingOffer);
+//        } catch (Codec.CodecException e) {
+//            e.printStackTrace();
+//        } catch (OntologyException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     protected void takeDown() {
@@ -218,7 +214,7 @@ public class ParkingManagerAgent extends GuiAgent {
 
     }
 
-    public ParkingAgentDataRepository getDataRepisitory() {
+    public ParkingAgentDataRepository getDataRepository() {
         return dataRepisitory;
     }
 }
