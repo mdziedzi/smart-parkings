@@ -3,6 +3,7 @@ package parking_manager_agent.behaviours.ReservationistRole;
 import jade.core.behaviours.ParallelBehaviour;
 import parking_manager_agent.NotifiableBehaviour;
 import parking_manager_agent.ParkingManagerAgent;
+import parking_manager_agent.behaviours.ReservationistRole.behaviours.CalculatePrice;
 import parking_manager_agent.behaviours.ReservationistRole.behaviours.StartListeningForReservation;
 
 import static parking_manager_agent.DataStoreTypes.*;
@@ -32,7 +33,12 @@ public class ReservationistRole extends ParallelBehaviour implements NotifiableB
     }
 
     public void bookParkingPlace() {
-        // todo
-        // todo calculate new price
+        parkingManagerAgent.bookParkingPlace();
+        addSubBehaviour(new CalculatePrice(this));
     }
+
+    public ParkingManagerAgent getParkingManagerAgent() {
+        return parkingManagerAgent;
+    }
+
 }

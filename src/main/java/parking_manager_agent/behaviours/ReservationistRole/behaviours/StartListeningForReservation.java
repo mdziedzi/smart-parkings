@@ -85,11 +85,10 @@ public class StartListeningForReservation extends OneShotBehaviour {
     }
 
     private boolean bookParkingPlace(ACLMessage accept) {
-        if ((int) getParent().getDataStore().get(N_OCCUPIED_PLACES) + 1 >= (int) getParent().getDataStore().get(CAPACITY)) {
+        if ((int) getParent().getDataStore().get(N_OCCUPIED_PLACES) + 1 >= (int) getParent().getDataStore().get(CAPACITY)) { //todo update data store before
             return false;
         } else {
-            reservationistRole.bookParkingPlace(); // numOfOccupiedPlaces++;
-//            price = priceAlgorithm.calculatePrice(numOfOccupiedPlaces, capacity);
+            reservationistRole.bookParkingPlace();
 //            parkingManagerGUI.refreshView();
             return true;
         }

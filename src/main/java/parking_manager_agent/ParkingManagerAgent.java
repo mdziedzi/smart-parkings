@@ -222,4 +222,16 @@ public class ParkingManagerAgent extends GuiAgent {
     public ParkingAgentDataRepository getDataRepository() {
         return dataRepisitory;
     }
+
+    public void bookParkingPlace() {
+        effectorsInterface.blockParkingPlace();
+    }
+
+    public PriceAlgorithm getPriceAlgorithm() {
+        return priceAlgorithm;
+    }
+
+    public void setNewPrice(double newPrice) {
+        dataRepisitory.setPriceInDollars(newPrice);
+    }
 }
