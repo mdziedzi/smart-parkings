@@ -1,19 +1,19 @@
-package parking_manager_agent.behaviours.Informator;
+package parking_manager_agent.behaviours.ReservationistRole;
 
 import jade.core.behaviours.ParallelBehaviour;
 import parking_manager_agent.NotifiableBehaviour;
 import parking_manager_agent.ParkingManagerAgent;
-import parking_manager_agent.behaviours.Informator.subbehaviours.Informator;
+import parking_manager_agent.behaviours.ReservationistRole.behaviours.ListenForReservation;
 
-public class InformatorRole extends ParallelBehaviour implements NotifiableBehaviour {
+public class ReservationistRole extends ParallelBehaviour implements NotifiableBehaviour {
 
     private final ParkingManagerAgent parkingManagerAgent;
 
-    public InformatorRole(ParkingManagerAgent a, int endCondition) {
+    public ReservationistRole(ParkingManagerAgent a, int endCondition) {
         super(a, endCondition);
         parkingManagerAgent = a;
         updateDataStore();
-        this.addSubBehaviour(new Informator());
+        this.addSubBehaviour(new ListenForReservation());
     }
 
     private void updateDataStore() {
@@ -26,5 +26,4 @@ public class InformatorRole extends ParallelBehaviour implements NotifiableBehav
     public void onDataChanged() {
         updateDataStore();
     }
-
 }
