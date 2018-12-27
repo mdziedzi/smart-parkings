@@ -5,6 +5,8 @@ import parking_manager_agent.NotifiableBehaviour;
 import parking_manager_agent.ParkingManagerAgent;
 import parking_manager_agent.behaviours.Informator.subbehaviours.Informator;
 
+import static parking_manager_agent.DataStoreTypes.*;
+
 public class InformatorRole extends ParallelBehaviour implements NotifiableBehaviour {
 
     private final ParkingManagerAgent parkingManagerAgent;
@@ -17,9 +19,9 @@ public class InformatorRole extends ParallelBehaviour implements NotifiableBehav
     }
 
     private void updateDataStore() {
-        getDataStore().put("price_in_dollars", parkingManagerAgent.getDataRepository().getPriceInDollars());
-        getDataStore().put("lat", parkingManagerAgent.getDataRepository().getLocalization().getLatitude());
-        getDataStore().put("lon", parkingManagerAgent.getDataRepository().getLocalization().getLongitude());
+        getDataStore().put(PRICE_IN_DOLLARS, parkingManagerAgent.getDataRepository().getPriceInDollars());
+        getDataStore().put(LATITUDE, parkingManagerAgent.getDataRepository().getLocalization().getLatitude());
+        getDataStore().put(LONGITUDE, parkingManagerAgent.getDataRepository().getLocalization().getLongitude());
     }
 
     @Override

@@ -19,6 +19,7 @@ import parking_devices.effectors.EffectorsInterface;
 import parking_devices.sensors.SensorsInterface;
 import parking_manager_agent.behaviours.Informator.InformatorRole;
 import parking_manager_agent.behaviours.ParkingPlacesAdministrator.ParkingPlacesAdministratorRole;
+import parking_manager_agent.behaviours.ReservationistRole.ReservationistRole;
 import price_algorithm.PriceAlgorithm;
 
 import static parking_manager_agent.util.Constants.SD_NAME;
@@ -84,6 +85,7 @@ public class ParkingManagerAgent extends GuiAgent {
 
         addBehaviour(new InformatorRole(this, ParallelBehaviour.WHEN_ALL));
         addBehaviour(new ParkingPlacesAdministratorRole(this, ParallelBehaviour.WHEN_ALL));
+        addBehaviour(new ReservationistRole(this, ParallelBehaviour.WHEN_ALL));
 //        addBehaviour(new ParkingMarketMonitorRole(this, ParallelBehaviour.WHEN_ALL));
 //        addBehaviour(new PriceDecisionMakerRole(this, ParallelBehaviour.WHEN_ALL));
 

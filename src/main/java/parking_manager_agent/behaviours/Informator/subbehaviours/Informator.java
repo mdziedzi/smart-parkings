@@ -10,6 +10,8 @@ import jade.lang.acl.MessageTemplate;
 import ontology.ParkingOffer;
 import ontology.SmartParkingsOntology;
 
+import static parking_manager_agent.DataStoreTypes.*;
+
 public class Informator extends CyclicBehaviour {
 
     @Override
@@ -40,9 +42,9 @@ public class Informator extends CyclicBehaviour {
 
         ParkingOffer parkingOffer = new ParkingOffer();
 
-        parkingOffer.setPrice((double) getParent().getDataStore().get("price_in_dollars"));
-        parkingOffer.setLat((double) getParent().getDataStore().get("lat"));
-        parkingOffer.setLon((double) getParent().getDataStore().get("lon"));
+        parkingOffer.setPrice((double) getParent().getDataStore().get(PRICE_IN_DOLLARS));
+        parkingOffer.setLat((double) getParent().getDataStore().get(LATITUDE));
+        parkingOffer.setLon((double) getParent().getDataStore().get(LONGITUDE));
         try {
             getAgent().getContentManager().fillContent(msg, parkingOffer);
         } catch (Codec.CodecException | OntologyException e) {

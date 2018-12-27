@@ -137,9 +137,9 @@ public class TestAgent extends Agent {
 
         ParkingOffer parkingOffer = new ParkingOffer();
 
-//        parkingOffer.setPrice((float) getDataStore().get("price_in_dollars"));
-//        parkingOffer.setLat((float) getDataStore().get("lat"));
-//        parkingOffer.setLon((float) getDataStore().get("lon"));
+//        parkingOffer.setPrice((float) getDataStore().get("PRICE_IN_DOLLARS"));
+//        parkingOffer.setLat((float) getDataStore().get(LATITUDE));
+//        parkingOffer.setLon((float) getDataStore().get(LONGITUDE));
         try {
             this.getContentManager().fillContent(msg, parkingOffer);
         } catch (Codec.CodecException | OntologyException e) {
