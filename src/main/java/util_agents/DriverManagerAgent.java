@@ -151,9 +151,7 @@ public class DriverManagerAgent extends GuiAgent {
                         ContentElement content = null;
                         try {
                             content = getContentManager().extractContent(msg);
-                        } catch (Codec.CodecException e1) {
-                            e1.printStackTrace();
-                        } catch (OntologyException e1) {
+                        } catch (Codec.CodecException | OntologyException e1) {
                             e1.printStackTrace();
                         }
 
@@ -189,13 +187,13 @@ public class DriverManagerAgent extends GuiAgent {
 
     // todo: replace this dummy decision algorithm
     private boolean isBetter(ParkingOffer currProposal, ParkingOffer bestProposal) {
-        float proposalPrice = currProposal.getPrice();
-        float proposalLat = currProposal.getLat();
-        float proposalLon = currProposal.getLon();
+        double proposalPrice = currProposal.getPrice();
+        double proposalLat = currProposal.getLat();
+        double proposalLon = currProposal.getLon();
 
-        float chosenPrice = bestProposal.getPrice();
-        float chosenLat = bestProposal.getLat();
-        float chosenLon = bestProposal.getLon();
+        double chosenPrice = bestProposal.getPrice();
+        double chosenLat = bestProposal.getLat();
+        double chosenLon = bestProposal.getLon();
 
         double proposalDist = Math.sqrt(Math.pow(localization.getLatitude() - proposalLat, 2) + Math.pow(localization.getLongitude() - proposalLon, 2));
         double chosenDist = Math.sqrt(Math.pow(localization.getLatitude() - chosenLat, 2) + Math.pow(localization.getLongitude() - chosenLon, 2));

@@ -7,8 +7,8 @@ import parking_manager_agent.behaviours.Informator.subbehaviours.Informator;
 public class InformatorRole extends ParallelBehaviour {
     public InformatorRole(ParkingManagerAgent a, int endCondition) {
         super(a, endCondition);
-        this.addSubBehaviour(new Informator());
         initDataStore(a);
+        this.addSubBehaviour(new Informator());
     }
 
     private void initDataStore(ParkingManagerAgent a) {

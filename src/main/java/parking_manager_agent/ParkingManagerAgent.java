@@ -21,6 +21,9 @@ import parking_manager_agent.behaviours.Informator.InformatorRole;
 import parking_manager_agent.behaviours.ParkingPlacesAdministrator.ParkingPlacesAdministratorRole;
 import price_algorithm.PriceAlgorithm;
 
+import static parking_manager_agent.util.Constants.SD_NAME;
+import static parking_manager_agent.util.Constants.SD_TYPE;
+
 public class ParkingManagerAgent extends GuiAgent {
 
     private AID[] parkings;
@@ -70,8 +73,8 @@ public class ParkingManagerAgent extends GuiAgent {
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
-        sd.setType("parking-info");
-        sd.setName("JADE-parking-info");
+        sd.setType(SD_TYPE);
+        sd.setName(SD_NAME);
         dfd.addServices(sd);
         try {
             DFService.register(this, dfd);

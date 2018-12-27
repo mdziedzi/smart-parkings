@@ -6,33 +6,33 @@ public class ParkingOffer implements AgentAction {
 
     //todo: add parking and agents IDs
 
-    private float price;
+    private double price;
 
-    private float lat;
+    private double lat;
 
-    private float lon;
+    private double lon;
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    public float getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public void setLat(float lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
-    public float getLon() {
+    public double getLon() {
         return lon;
     }
 
-    public void setLon(float lon) {
+    public void setLon(double lon) {
         this.lon = lon;
     }
 }

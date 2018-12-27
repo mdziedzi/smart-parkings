@@ -7,7 +7,8 @@ public final class Constants {
     public static int N_GENERATED_DRIVERS = 20;
 
     public static int SLEEP_BEFORE_PARKINGS_PRODUCTION = 10;
-    public static int SLEEP_BEFORE_DRIVERS_PRODUCTION = 500;
+    // ServiceDescription
+    public static final String SD_TYPE = "parking";
     public static int SLEEP_BETWEEN_EACH_DRIVER_PRODUCTION = 1000;
 
 
@@ -43,6 +44,7 @@ public final class Constants {
     public static int TIMEOUT_WAITING_FOR_PARKING_REPLY = 2000;
     public static double PRICE_FACTOR = 0.1;
     public static double DISTANCE_FACTOR = 0.01;
-
+    public static final String SD_NAME = "parking";
+    public static int SLEEP_BEFORE_DRIVERS_PRODUCTION = 1000;
 
 }

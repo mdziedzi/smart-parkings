@@ -67,12 +67,19 @@ public class BootAgent extends Agent {
                     }
                 }
 
-//                // wait for asynchronous producing of Parkings
-//                try {
-//                    Thread.sleep(SLEEP_BEFORE_DRIVERS_PRODUCTION);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
+                // wait for asynchronous producing of Parkings
+                try {
+                    Thread.sleep(SLEEP_BEFORE_DRIVERS_PRODUCTION);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    ac = cc.createNewAgent("test", "util_agents.TestAgent", null);
+                    ac.start();
+                } catch (StaleProxyException e) {
+                    e.printStackTrace();
+                }
 //
 //                // proudce DriverManagerAgents
 //                for (int i = 0; i < N_GENERATED_DRIVERS; i++) {

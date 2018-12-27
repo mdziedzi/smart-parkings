@@ -40,9 +40,13 @@ public class Informator extends CyclicBehaviour {
 
         ParkingOffer parkingOffer = new ParkingOffer();
 
-        parkingOffer.setPrice((float) getDataStore().get("price_in_dollars"));
-        parkingOffer.setLat((float) getDataStore().get("lat"));
-        parkingOffer.setLon((float) getDataStore().get("lon"));
+        System.out.println((double) getParent().getDataStore().get("price_in_dollars"));
+        System.out.println((double) getParent().getDataStore().get("lat"));
+        System.out.println((double) getParent().getDataStore().get("lon"));
+
+        parkingOffer.setPrice((double) getParent().getDataStore().get("price_in_dollars"));
+        parkingOffer.setLat((double) getParent().getDataStore().get("lat"));
+        parkingOffer.setLon((double) getParent().getDataStore().get("lon"));
         try {
             getAgent().getContentManager().fillContent(msg, parkingOffer);
         } catch (Codec.CodecException | OntologyException e) {
