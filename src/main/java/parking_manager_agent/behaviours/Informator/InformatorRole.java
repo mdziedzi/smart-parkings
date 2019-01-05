@@ -15,7 +15,7 @@ public class InformatorRole extends ParallelBehaviour implements NotifiableBehav
         super(a, endCondition);
         parkingManagerAgent = a;
         updateDataStore();
-        this.addSubBehaviour(new Informator());
+        this.addSubBehaviour(new Informator(this));
     }
 
     private void updateDataStore() {
