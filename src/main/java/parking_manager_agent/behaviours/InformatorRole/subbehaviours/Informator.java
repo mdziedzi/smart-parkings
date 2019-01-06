@@ -1,4 +1,4 @@
-package parking_manager_agent.behaviours.Informator.subbehaviours;
+package parking_manager_agent.behaviours.InformatorRole.subbehaviours;
 
 import jade.content.ContentElement;
 import jade.content.lang.Codec;
@@ -14,7 +14,7 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 import ontology.ParkingOffer;
 import ontology.SmartParkingsOntology;
-import parking_manager_agent.behaviours.Informator.InformatorRole;
+import parking_manager_agent.behaviours.InformatorRole.InformatorRole;
 
 import static parking_manager_agent.DataStoreTypes.*;
 

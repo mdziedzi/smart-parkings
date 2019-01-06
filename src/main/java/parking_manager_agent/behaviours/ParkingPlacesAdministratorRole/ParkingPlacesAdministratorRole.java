@@ -1,4 +1,4 @@
-package parking_manager_agent.behaviours.ParkingPlacesAdministrator;
+package parking_manager_agent.behaviours.ParkingPlacesAdministratorRole;
 
 import jade.core.Agent;
 import jade.core.behaviours.ParallelBehaviour;

@@ -1,9 +1,9 @@
-package parking_manager_agent.behaviours.Informator;
+package parking_manager_agent.behaviours.InformatorRole;
 
 import jade.core.behaviours.ParallelBehaviour;
 import parking_manager_agent.NotifiableBehaviour;
 import parking_manager_agent.ParkingManagerAgent;
-import parking_manager_agent.behaviours.Informator.subbehaviours.Informator;
+import parking_manager_agent.behaviours.InformatorRole.subbehaviours.Informator;
 
 import static parking_manager_agent.DataStoreTypes.*;
 

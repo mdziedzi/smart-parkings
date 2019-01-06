@@ -1,4 +1,4 @@
-package parking_manager_agent.behaviours.ParkingMarketMonitor;
+package parking_manager_agent.behaviours.ParkingMarketMonitorRole;
 
 import jade.core.behaviours.ParallelBehaviour;
 

@@ -17,8 +17,8 @@ import ontology.SmartParkingsOntology;
 import parking_devices.ConnectionCallback;
 import parking_devices.effectors.EffectorsInterface;
 import parking_devices.sensors.SensorsInterface;
-import parking_manager_agent.behaviours.Informator.InformatorRole;
-import parking_manager_agent.behaviours.ParkingPlacesAdministrator.ParkingPlacesAdministratorRole;
+import parking_manager_agent.behaviours.InformatorRole.InformatorRole;
+import parking_manager_agent.behaviours.ParkingPlacesAdministratorRole.ParkingPlacesAdministratorRole;
 import parking_manager_agent.behaviours.ReservationistRole.ReservationistRole;
 import price_algorithm.PriceAlgorithm;
 
