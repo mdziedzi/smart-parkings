@@ -20,6 +20,8 @@ import static parking_manager_agent.DataStoreTypes.*;
 
 public class Informator extends OneShotBehaviour {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Informator.class);
+
     private final InformatorRole parentBehaviour;
 
     public Informator(InformatorRole informatorRole) {
@@ -28,25 +30,6 @@ public class Informator extends OneShotBehaviour {
 
     @Override
     public void action() {
-//        MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST), new MessageTemplate((MessageTemplate.MatchExpression) matchMsg -> {
-//            ContentElement content = null;
-//            try {
-//                content = Informator.this.getAgent().getContentManager().extractContent(matchMsg);
-//            } catch (Codec.CodecException | OntologyException e1) {
-//                e1.printStackTrace();
-//            }
-//            return content instanceof ParkingOffer;
-//        }));
-//        ACLMessage msg = myAgent.receive(mt);
-//        if (msg != null) {
-//            System.out.println(msg);
-//            ACLMessage replyMsg = msg.createReply();
-//            prepareMsg(replyMsg);
-//            getAgent().send(replyMsg);
-//        } else {
-//            block();
-//        }
-
         System.out.println("Agent " + getAgent().getLocalName() + " waiting for requests...");
         MessageTemplate template = MessageTemplate.and(
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST), MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST), new MessageTemplate((MessageTemplate.MatchExpression) matchMsg -> {
@@ -78,17 +61,11 @@ public class Informator extends OneShotBehaviour {
             }
 
             protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException {
-//                if (performAction()) {
                 System.out.println("Agent " + getAgent().getLocalName() + ": Action successfully performed");
                 ACLMessage inform = request.createReply();
                 inform.setPerformative(ACLMessage.INFORM);
                 prepareMsg(inform);
                 return inform;
-//                }
-//                else {
-//                    System.out.println("Agent "+getAgent().getLocalName()+": Action failed");
-//                    throw new FailureException("unexpected-error");
-//                }
             }
         });
 
@@ -100,6 +77,11 @@ public class Informator extends OneShotBehaviour {
         msg.setOntology(SmartParkingsOntology.getInstance().getName());
 
         ParkingOffer parkingOffer = new ParkingOffer();
+
+        log.debug("prepareMsg: ");
+        log.debug(String.valueOf((double) parentBehaviour.getDataStore().get(PRICE_IN_DOLLARS)));
+        log.debug(String.valueOf((double) parentBehaviour.getDataStore().get(LATITUDE)));
+        log.debug(String.valueOf((double) parentBehaviour.getDataStore().get(LONGITUDE)));
 
         parkingOffer.setPrice((double) parentBehaviour.getDataStore().get(PRICE_IN_DOLLARS));
         parkingOffer.setLat((double) parentBehaviour.getDataStore().get(LATITUDE));
