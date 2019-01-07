@@ -41,7 +41,7 @@ public final class Constants {
     public static double STATIC_PARKING_PRICE = 0.2;
 
     // DriverManagerAgent.class
-    public static int TIMEOUT_WAITING_FOR_PARKING_REPLY = 2000;
+    public static int TIMEOUT_WAITING_FOR_PARKING_REPLY = 5000;
     public static double PRICE_FACTOR = 0.1;
     public static double DISTANCE_FACTOR = 0.01;
     public static final String SD_NAME = "parking";

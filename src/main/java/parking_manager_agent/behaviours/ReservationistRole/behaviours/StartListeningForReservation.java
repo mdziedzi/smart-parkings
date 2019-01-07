@@ -13,11 +13,15 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.ContractNetResponder;
 import ontology.ParkingOffer;
 import ontology.SmartParkingsOntology;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import parking_manager_agent.behaviours.ReservationistRole.ReservationistRole;
 
 import static parking_manager_agent.DataStoreTypes.*;
 
 public class StartListeningForReservation extends OneShotBehaviour {
+
+    private static final Logger log = LoggerFactory.getLogger(StartListeningForReservation.class);
 
     private final ReservationistRole reservationistRole;
 
@@ -73,10 +77,14 @@ public class StartListeningForReservation extends OneShotBehaviour {
         msg.setLanguage(new SLCodec().getName());
         msg.setOntology(SmartParkingsOntology.getInstance().getName());
 
+        log.debug(String.valueOf((double) reservationistRole.getDataStore().get(PRICE_IN_DOLLARS)));
+        log.debug(String.valueOf((double) reservationistRole.getDataStore().get(LATITUDE)));
+        log.debug(String.valueOf((double) reservationistRole.getDataStore().get(LONGITUDE)));
+
         ParkingOffer parkingOffer = new ParkingOffer();
-        parkingOffer.setPrice((double) getParent().getDataStore().get(PRICE_IN_DOLLARS));
-        parkingOffer.setLat((double) getParent().getDataStore().get(LATITUDE));
-        parkingOffer.setLon((double) getParent().getDataStore().get(LONGITUDE));
+        parkingOffer.setPrice((double) reservationistRole.getDataStore().get(PRICE_IN_DOLLARS));
+        parkingOffer.setLat((double) reservationistRole.getDataStore().get(LATITUDE));
+        parkingOffer.setLon((double) reservationistRole.getDataStore().get(LONGITUDE));
         try {
             getAgent().getContentManager().fillContent(msg, parkingOffer);
         } catch (Codec.CodecException | OntologyException e) {
@@ -85,7 +93,7 @@ public class StartListeningForReservation extends OneShotBehaviour {
     }
 
     private boolean bookParkingPlace(ACLMessage accept) {
-        if ((int) getParent().getDataStore().get(N_OCCUPIED_PLACES) + 1 >= (int) getParent().getDataStore().get(CAPACITY)) { //todo update data store before
+        if ((int) reservationistRole.getDataStore().get(N_OCCUPIED_PLACES) + 1 >= (int) reservationistRole.getDataStore().get(CAPACITY)) { //todo update data store before
             return false;
         } else {
             reservationistRole.bookParkingPlace();

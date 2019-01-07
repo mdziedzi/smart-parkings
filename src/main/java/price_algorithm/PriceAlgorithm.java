@@ -2,5 +2,5 @@ package price_algorithm;
 
 public interface PriceAlgorithm {
 
-    double calculatePrice(double numOfOccupiedPlaces, double capacity);
+    double calculatePrice(int numOfOccupiedPlaces, int capacity);
 }
