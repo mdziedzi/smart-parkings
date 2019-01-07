@@ -18,7 +18,6 @@ import parking_devices.ConnectionCallback;
 import parking_devices.effectors.EffectorsInterface;
 import parking_devices.sensors.SensorsInterface;
 import parking_manager_agent.behaviours.InformatorRole.InformatorRole;
-import parking_manager_agent.behaviours.ParkingPlacesAdministratorRole.ParkingPlacesAdministratorRole;
 import parking_manager_agent.behaviours.ReservationistRole.ReservationistRole;
 import price_algorithm.PriceAlgorithm;
 
@@ -84,52 +83,8 @@ public class ParkingManagerAgent extends GuiAgent {
         }
 
         addBehaviour(new InformatorRole(this, ParallelBehaviour.WHEN_ALL));
-        addBehaviour(new ParkingPlacesAdministratorRole(this, ParallelBehaviour.WHEN_ALL));
+//        addBehaviour(new ParkingPlacesAdministratorRole(this, ParallelBehaviour.WHEN_ALL));
         addBehaviour(new ReservationistRole(this, ParallelBehaviour.WHEN_ALL));
-//        addBehaviour(new ParkingMarketMonitorRole(this, ParallelBehaviour.WHEN_ALL));
-//        addBehaviour(new PriceDecisionMakerRole(this, ParallelBehaviour.WHEN_ALL));
-
-
-//        System.out.println("Agent " + getLocalName() + " waiting for CFP...");
-//        MessageTemplate template = MessageTemplate.and(
-//                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
-//                MessageTemplate.MatchPerformative(ACLMessage.CFP));
-//
-//        addBehaviour(new ContractNetResponder(this, template) {
-//            protected ACLMessage prepareResponse(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
-//                System.out.println("Agent " + getLocalName() + ": CFP received from " + cfp.getSender().getName() + ". Action is " + cfp.getContent());
-//                if (cfp.getContent() != null) { // todo
-//                    // We provide a proposal
-//                    System.out.println("Agent " + getLocalName() + ": Proposing " + price);
-//                    ACLMessage proposePriceMsg = cfp.createReply();
-//                    proposePriceMsg.setPerformative(ACLMessage.PROPOSE);
-//                    prepareProposePriceMsg(proposePriceMsg);
-//                    return proposePriceMsg;
-//                } else {
-//                    // We refuse to provide a proposal
-//                    System.out.println("Agent " + getLocalName() + ": Refuse");
-//                    throw new RefuseException("evaluation-failed");
-//                }
-//            }
-//
-//            protected ACLMessage prepareResultNotification(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
-//                ACLMessage reply = accept.createReply();
-//                if (bookParkingPlace(accept)) {
-//                    System.out.println("Agent " + getLocalName() + ": Proposal accepted");
-//                    System.out.println("Agent " + getLocalName() + ": Action successfully performed");
-//                    reply.setPerformative(ACLMessage.INFORM);
-//                    return reply;
-//                } else {
-//                    reply.setPerformative(ACLMessage.REFUSE);
-//                    return reply;
-//                }
-//
-//            }
-//
-//            protected void handleRejectProposal(ACLMessage reject) {
-//                System.out.println("Agent " + getLocalName() + ": Proposal rejected");
-//            }
-//        });
     }
 
     private ParkingAgentDataRepository initParkingData() {
@@ -171,36 +126,7 @@ public class ParkingManagerAgent extends GuiAgent {
             }
         });
 
-
     }
-
-//    private boolean bookParkingPlace(ACLMessage accept) {
-//        if (numOfOccupiedPlaces >= capacity) {
-//            return false;
-//        } else {
-//            numOfOccupiedPlaces++;
-//            price = priceAlgorithm.calculatePrice(numOfOccupiedPlaces, capacity);
-////            parkingManagerGUI.refreshView();
-//            return true;
-//        }
-//    }
-
-//    private void prepareProposePriceMsg(ACLMessage msg) {
-//        msg.setLanguage(codec.getName());
-//        msg.setOntology(ontology.getName());
-//
-//        ParkingOffer parkingOffer = new ParkingOffer();
-//        parkingOffer.setPrice((float) price);
-//        parkingOffer.setLat((float) localization.getLatitude());
-//        parkingOffer.setLon((float) localization.getLongitude());
-//        try {
-//            getContentManager().fillContent(msg, parkingOffer);
-//        } catch (Codec.CodecException e) {
-//            e.printStackTrace();
-//        } catch (OntologyException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     @Override
     protected void takeDown() {

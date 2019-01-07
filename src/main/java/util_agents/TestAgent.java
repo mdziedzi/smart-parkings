@@ -33,14 +33,6 @@ public class TestAgent extends Agent {
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);
 
-//        ParallelBehaviour parallelBehaviour = new ParallelBehaviour(this, ParallelBehaviour.WHEN_ALL) {
-//            @Override
-//            public int onEnd() {
-//                System.out.println("on end");
-//                return super.onEnd();
-//            }
-//        };
-
         searchForAgents();
 
         addBehaviour(new ParallelBehaviour() {
@@ -75,43 +67,6 @@ public class TestAgent extends Agent {
             }
         });
 
-//        addBehaviour(new OneShotBehaviour() {
-//            @Override
-//            public void action() {
-//                System.out.println("1");
-//
-//                ACLMessage msg = new ACLMessage (ACLMessage.REQUEST);
-//                for (AID parking : parkings)
-//                    msg.addReceiver(parking);
-////                msg.setConversationId ("test");
-////                msg.setReplyWith("test-reply");
-//                prepareMsg(msg);
-//                myAgent.send(msg);
-////                try {
-////                    Thread.sleep(5000);
-////                } catch (InterruptedException e) {
-////                    e.printStackTrace();
-////                }
-//
-//
-//
-//
-//
-//
-//
-//            }
-//        });
-//        addBehaviour(new OneShotBehaviour() {
-//            @Override
-//            public void action() {
-//                ACLMessage receiveMsg = myAgent.receive();
-//                if (receiveMsg != null) {
-//                    System.out.println(receiveMsg);
-//                } else {
-//                    block();
-//                }
-//            }
-//        });
     }
 
     private void searchForAgents() {
