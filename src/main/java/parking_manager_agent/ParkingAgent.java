@@ -5,14 +5,12 @@ import exceptions.SensorsConnectionFailure;
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
 import jade.content.onto.Ontology;
-import jade.core.AID;
+import jade.core.Agent;
 import jade.core.behaviours.ParallelBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
-import jade.gui.GuiAgent;
-import jade.gui.GuiEvent;
 import ontology.SmartParkingsOntology;
 import parking_devices.ConnectionCallback;
 import parking_devices.effectors.EffectorsInterface;
@@ -24,31 +22,28 @@ import price_algorithm.PriceAlgorithm;
 import static parking_manager_agent.util.Constants.SD_NAME;
 import static parking_manager_agent.util.Constants.SD_TYPE;
 
-public class ParkingAgent extends GuiAgent {
-
-    private AID[] parkings;
-
-//    private ParkingManagerGUI parkingManagerGUI;
+/**
+ * Agent that manages physical parking environment.
+ * todo: type something more
+ */
+public class ParkingAgent extends Agent {
 
     private Codec codec = new SLCodec();
     private Ontology ontology = SmartParkingsOntology.getInstance();
 
-    // model
-    private ParkingAgentDataRepository dataRepisitory;
+    private ParkingAgentDataRepository dataRepository;
 
     private SensorsInterface sensorsInterface;
     private EffectorsInterface effectorsInterface;
-
     private PriceAlgorithm priceAlgorithm;
 
     @Override
     protected void setup() {
-
-        // Register language and ontology
+        // Register language and ontology.
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);
 
-        // set args
+        // Set fields from agent arguments.
         Object[] args = getArguments();
         if (args != null) {
             if (args.length > 1) {
@@ -60,16 +55,29 @@ public class ParkingAgent extends GuiAgent {
             }
         }
 
-        this.dataRepisitory = initParkingData();
+        this.dataRepository = initParkingData();
 
-        this.dataRepisitory.setPriceInDollars(priceAlgorithm.calculatePrice(dataRepisitory.getnOccupiedPlaces(),
-                dataRepisitory.getCapacity()));
+        // set initial price
+        this.dataRepository.setPriceInDollars(priceAlgorithm.calculatePrice(dataRepository.getnOccupiedPlaces(),
+                dataRepository.getCapacity()));
 
 
         // init GUI
 //        parkingManagerGUI = new ParkingManagerGUI(this);
 
         // Register the parking service in the yellow pages
+        registerParkingAgentInDF();
+
+        // Add GAIA project roles as a behaviours to agent.
+        addBehaviour(new InformatorRole(this, ParallelBehaviour.WHEN_ALL));
+//        addBehaviour(new ParkingPlacesAdministratorRole(this, ParallelBehaviour.WHEN_ALL));
+        addBehaviour(new ReservationistRole(this, ParallelBehaviour.WHEN_ALL));
+    }
+
+    /**
+     * Registers parking service in Directory Facilitator aka Yellow Pages.
+     */
+    private void registerParkingAgentInDF() {
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
@@ -81,12 +89,13 @@ public class ParkingAgent extends GuiAgent {
         } catch (FIPAException fe) {
             fe.printStackTrace();
         }
-
-        addBehaviour(new InformatorRole(this, ParallelBehaviour.WHEN_ALL));
-//        addBehaviour(new ParkingPlacesAdministratorRole(this, ParallelBehaviour.WHEN_ALL));
-        addBehaviour(new ReservationistRole(this, ParallelBehaviour.WHEN_ALL));
     }
 
+    /**
+     * Checks connection with sensors and effectors.
+     *
+     * @return Initialized ParkingAgentDataRepository.
+     */
     private ParkingAgentDataRepository initParkingData() {
         checkSensorsConnection();
         checkEffectorsConnection();
@@ -95,9 +104,11 @@ public class ParkingAgent extends GuiAgent {
                 sensorsInterface.getNOccupiedPlaces(),
                 sensorsInterface.getPriceInDollars(),
                 sensorsInterface.getLocalization());
-
     }
 
+    /**
+     * Checks connection with effectors and handle callback result.
+     */
     private void checkEffectorsConnection() {
         effectorsInterface.checkConnection(new ConnectionCallback() {
 
@@ -113,6 +124,9 @@ public class ParkingAgent extends GuiAgent {
         });
     }
 
+    /**
+     * Checks connection with sensors and handle callback result.
+     */
     private void checkSensorsConnection() {
         sensorsInterface.checkConnection(new ConnectionCallback() {
             @Override
@@ -128,6 +142,13 @@ public class ParkingAgent extends GuiAgent {
 
     }
 
+    /**
+     * Calls EffectorsInterface and block parking place.
+     */
+    public void bookParkingPlace() { //todo czy to ma wskazywac konkretne miejsce?
+        effectorsInterface.blockParkingPlace();
+    }
+
     @Override
     protected void takeDown() {
         // Deregister from the yellow pages
@@ -141,23 +162,23 @@ public class ParkingAgent extends GuiAgent {
         System.out.println("Parking-parking_manager_agent " + getAID().getName() + " terminating.");
     }
 
-    protected void onGuiEvent(GuiEvent guiEvent) {
-
-    }
-
+    /**
+     * Simple getter method returning ParkingAgentDataRepository
+     * @return ParkingAgentDataRepository
+     */
     public ParkingAgentDataRepository getDataRepository() {
-        return dataRepisitory;
+        return dataRepository;
     }
 
-    public void bookParkingPlace() {
-        effectorsInterface.blockParkingPlace();
-    }
-
+    /**
+     * Simple getter method returning PriceAlgorithm
+     * @return PriceAlgorithm
+     */
     public PriceAlgorithm getPriceAlgorithm() {
         return priceAlgorithm;
     }
 
     public void setNewPrice(double newPrice) {
-        dataRepisitory.setPriceInDollars(newPrice);
+        dataRepository.setPriceInDollars(newPrice);
     }
 }
