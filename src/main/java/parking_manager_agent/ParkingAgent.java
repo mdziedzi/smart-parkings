@@ -5,12 +5,13 @@ import exceptions.SensorsConnectionFailure;
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
 import jade.content.onto.Ontology;
-import jade.core.Agent;
 import jade.core.behaviours.ParallelBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import jade.gui.GuiAgent;
+import jade.gui.GuiEvent;
 import ontology.SmartParkingsOntology;
 import parking_devices.ConnectionCallback;
 import parking_devices.effectors.EffectorsInterface;
@@ -26,7 +27,7 @@ import static parking_manager_agent.util.Constants.SD_TYPE;
  * Agent that manages physical parking environment.
  * todo: type something more
  */
-public class ParkingAgent extends Agent {
+public class ParkingAgent extends GuiAgent {
 
     private Codec codec = new SLCodec();
     private Ontology ontology = SmartParkingsOntology.getInstance();
@@ -180,5 +181,10 @@ public class ParkingAgent extends Agent {
 
     public void setNewPrice(double newPrice) {
         dataRepository.setPriceInDollars(newPrice);
+    }
+
+    @Override
+    protected void onGuiEvent(GuiEvent guiEvent) {
+
     }
 }
