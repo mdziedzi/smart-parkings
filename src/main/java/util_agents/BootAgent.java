@@ -36,7 +36,7 @@ public class BootAgent extends Agent {
                     // new parking_manager_agent
                     try {
                         Object[] args = produceAgentArgs("mutable", "default", "default");
-                        ac = cc.createNewAgent("pmp" + i, "parking_manager_agent.ParkingManagerAgent", args);
+                        ac = cc.createNewAgent("pmp" + i, "parking_manager_agent.ParkingAgent", args);
                         ac.start();
 
                         try {
@@ -54,7 +54,7 @@ public class BootAgent extends Agent {
                     // new parking_manager_agent
                     try {
                         Object[] args = produceAgentArgs("const", "default", "default");
-                        ac = cc.createNewAgent("pcp" + i, "parking_manager_agent.ParkingManagerAgent", args);
+                        ac = cc.createNewAgent("pcp" + i, "parking_manager_agent.ParkingAgent", args);
                         ac.start();
 
                         try {

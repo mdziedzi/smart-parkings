@@ -2,7 +2,7 @@ package parking_manager_agent.behaviours.ReservationistRole;
 
 import jade.core.behaviours.ParallelBehaviour;
 import parking_manager_agent.NotifiableBehaviour;
-import parking_manager_agent.ParkingManagerAgent;
+import parking_manager_agent.ParkingAgent;
 import parking_manager_agent.behaviours.ReservationistRole.behaviours.CalculatePrice;
 import parking_manager_agent.behaviours.ReservationistRole.behaviours.StartListeningForReservation;
 
@@ -10,21 +10,21 @@ import static parking_manager_agent.DataStoreTypes.*;
 
 public class ReservationistRole extends ParallelBehaviour implements NotifiableBehaviour {
 
-    private final ParkingManagerAgent parkingManagerAgent;
+    private final ParkingAgent parkingAgent;
 
-    public ReservationistRole(ParkingManagerAgent a, int endCondition) {
+    public ReservationistRole(ParkingAgent a, int endCondition) {
         super(a, endCondition);
-        parkingManagerAgent = a;
+        parkingAgent = a;
         updateDataStore();
         this.addSubBehaviour(new StartListeningForReservation(this));
     }
 
     private void updateDataStore() {
-        getDataStore().put(PRICE_IN_DOLLARS, parkingManagerAgent.getDataRepository().getPriceInDollars());
-        getDataStore().put(LATITUDE, parkingManagerAgent.getDataRepository().getLocalization().getLatitude());
-        getDataStore().put(LONGITUDE, parkingManagerAgent.getDataRepository().getLocalization().getLongitude());
-        getDataStore().put(N_OCCUPIED_PLACES, parkingManagerAgent.getDataRepository().getnOccupiedPlaces());
-        getDataStore().put(CAPACITY, parkingManagerAgent.getDataRepository().getCapacity());
+        getDataStore().put(PRICE_IN_DOLLARS, parkingAgent.getDataRepository().getPriceInDollars());
+        getDataStore().put(LATITUDE, parkingAgent.getDataRepository().getLocalization().getLatitude());
+        getDataStore().put(LONGITUDE, parkingAgent.getDataRepository().getLocalization().getLongitude());
+        getDataStore().put(N_OCCUPIED_PLACES, parkingAgent.getDataRepository().getnOccupiedPlaces());
+        getDataStore().put(CAPACITY, parkingAgent.getDataRepository().getCapacity());
     }
 
     @Override
@@ -33,12 +33,12 @@ public class ReservationistRole extends ParallelBehaviour implements NotifiableB
     }
 
     public void bookParkingPlace() {
-        parkingManagerAgent.bookParkingPlace();
+        parkingAgent.bookParkingPlace();
         addSubBehaviour(new CalculatePrice(this));
     }
 
-    public ParkingManagerAgent getParkingManagerAgent() {
-        return parkingManagerAgent;
+    public ParkingAgent getParkingAgent() {
+        return parkingAgent;
     }
 
 }

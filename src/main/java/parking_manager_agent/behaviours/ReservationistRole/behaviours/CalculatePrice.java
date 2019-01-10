@@ -16,7 +16,7 @@ public class CalculatePrice extends OneShotBehaviour {
 
     @Override
     public void action() {
-        reservationistRole.getParkingManagerAgent().getPriceAlgorithm().calculatePrice((int) getParent()
+        reservationistRole.getParkingAgent().getPriceAlgorithm().calculatePrice((int) getParent()
                 .getDataStore().get(N_OCCUPIED_PLACES), (int) getParent().getDataStore().get(CAPACITY));
     }
 }

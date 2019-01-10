@@ -24,7 +24,7 @@ import price_algorithm.PriceAlgorithm;
 import static parking_manager_agent.util.Constants.SD_NAME;
 import static parking_manager_agent.util.Constants.SD_TYPE;
 
-public class ParkingManagerAgent extends GuiAgent {
+public class ParkingAgent extends GuiAgent {
 
     private AID[] parkings;
 

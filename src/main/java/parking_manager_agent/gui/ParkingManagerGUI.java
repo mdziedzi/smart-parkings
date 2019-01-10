@@ -1,6 +1,6 @@
 package parking_manager_agent.gui;
 
-import parking_manager_agent.ParkingManagerAgent;
+import parking_manager_agent.ParkingAgent;
 import parking_manager_agent.util.WindowsCounter;
 
 import javax.swing.*;
@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 
 public class ParkingManagerGUI extends JFrame implements ActionListener {
 
-    private ParkingManagerAgent agent;
+    private ParkingAgent agent;
 
     private JPanel jPanel;
 
@@ -20,9 +20,9 @@ public class ParkingManagerGUI extends JFrame implements ActionListener {
     private JLabel lat;
     private JLabel price;
 
-    public ParkingManagerGUI(ParkingManagerAgent parkingManagerAgent) {
+    public ParkingManagerGUI(ParkingAgent parkingAgent) {
 
-        this.agent = parkingManagerAgent;
+        this.agent = parkingAgent;
 
         setSize(200, 200);
 

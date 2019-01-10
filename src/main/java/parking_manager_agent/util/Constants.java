@@ -36,7 +36,7 @@ public final class Constants {
     public static int MIN_OCCUPIED_PLACES = 2;
     public static int OCCUPIED_PLACES = 0;
 
-    // ParkingManagerAgent.class
+    // ParkingAgent.class
     public static double MIN_PARKING_PRICE = 0.2;
     public static double STATIC_PARKING_PRICE = 0.2;
 
