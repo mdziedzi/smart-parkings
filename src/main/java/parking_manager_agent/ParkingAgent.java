@@ -13,10 +13,13 @@ import jade.domain.FIPAException;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 import ontology.SmartParkingsOntology;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import parking_devices.ConnectionCallback;
 import parking_devices.effectors.EffectorsInterface;
 import parking_devices.sensors.SensorsInterface;
 import parking_manager_agent.behaviours.InformatorRole.InformatorRole;
+import parking_manager_agent.behaviours.ReservationRole.ReservationRole;
 import parking_manager_agent.behaviours.ReservationistRole.ReservationistRole;
 import price_algorithm.PriceAlgorithm;
 
@@ -28,6 +31,8 @@ import static parking_manager_agent.util.Constants.SD_TYPE;
  * todo: type something more
  */
 public class ParkingAgent extends GuiAgent {
+
+    private static final Logger log = LoggerFactory.getLogger(ParkingAgent.class);
 
     private Codec codec = new SLCodec();
     private Ontology ontology = SmartParkingsOntology.getInstance();
@@ -73,6 +78,7 @@ public class ParkingAgent extends GuiAgent {
         addBehaviour(new InformatorRole(this, ParallelBehaviour.WHEN_ALL));
 //        addBehaviour(new ParkingPlacesAdministratorRole(this, ParallelBehaviour.WHEN_ALL));
         addBehaviour(new ReservationistRole(this, ParallelBehaviour.WHEN_ALL));
+        addBehaviour(new ReservationRole(this, ParallelBehaviour.WHEN_ALL));
     }
 
     /**
@@ -148,6 +154,7 @@ public class ParkingAgent extends GuiAgent {
      */
     public void bookParkingPlace() { //todo czy to ma wskazywac konkretne miejsce?
         effectorsInterface.blockParkingPlace();
+        log.debug("parking place has been blocked");
     }
 
     @Override
