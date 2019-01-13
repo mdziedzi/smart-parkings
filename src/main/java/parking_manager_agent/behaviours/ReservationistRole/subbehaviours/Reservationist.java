@@ -1,4 +1,4 @@
-package parking_manager_agent.behaviours.ReservationRole.subbehaviours;
+package parking_manager_agent.behaviours.ReservationistRole.subbehaviours;
 
 import jade.content.ContentElement;
 import jade.content.lang.Codec;
@@ -14,19 +14,19 @@ import jade.proto.AchieveREResponder;
 import ontology.ReservationRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import parking_manager_agent.behaviours.ReservationRole.ReservationRole;
+import parking_manager_agent.behaviours.ReservationistRole.ReservationistRole;
 
 import static parking_manager_agent.DataStoreTypes.CAPACITY;
 import static parking_manager_agent.DataStoreTypes.N_OCCUPIED_PLACES;
 
-public class Reservation extends OneShotBehaviour {
+public class Reservationist extends OneShotBehaviour {
 
-    private static final Logger log = LoggerFactory.getLogger(Reservation.class);
+    private static final Logger log = LoggerFactory.getLogger(Reservationist.class);
 
-    private final ReservationRole parentBehaviour;
+    private final ReservationistRole parentBehaviour;
 
-    public Reservation(ReservationRole reservationRole) {
-        parentBehaviour = reservationRole;
+    public Reservationist(ReservationistRole reservationistRole) {
+        parentBehaviour = reservationistRole;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class Reservation extends OneShotBehaviour {
                     ContentElement content = null;
                     try {
                         log.debug("inside match message template");
-                        content = Reservation.this.getAgent().getContentManager().extractContent(matchMsg);
+                        content = Reservationist.this.getAgent().getContentManager().extractContent(matchMsg);
                     } catch (Codec.CodecException | OntologyException e1) {
                         e1.printStackTrace();
                     }

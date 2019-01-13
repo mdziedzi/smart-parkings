@@ -1,4 +1,4 @@
-package parking_manager_agent.behaviours.ReservationistRole.behaviours;
+package parking_manager_agent.behaviours.MarketerRole.subbehaviours;
 
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
@@ -15,19 +15,19 @@ import ontology.ParkingOffer;
 import ontology.SmartParkingsOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import parking_manager_agent.behaviours.ReservationistRole.ReservationistRole;
+import parking_manager_agent.behaviours.MarketerRole.MarketerRole;
 
 import static parking_manager_agent.DataStoreTypes.*;
 
-public class StartListeningForReservation extends OneShotBehaviour {
+public class StartListeningForOfferRequest extends OneShotBehaviour {
 
-    private static final Logger log = LoggerFactory.getLogger(StartListeningForReservation.class);
+    private static final Logger log = LoggerFactory.getLogger(StartListeningForOfferRequest.class);
 
-    private final ReservationistRole reservationistRole;
+    private final MarketerRole marketerRole;
 
-    public StartListeningForReservation(ReservationistRole reservationistRole) {
+    public StartListeningForOfferRequest(MarketerRole marketerRole) {
         super();
-        this.reservationistRole = reservationistRole;
+        this.marketerRole = marketerRole;
     }
 
     @Override
@@ -77,14 +77,14 @@ public class StartListeningForReservation extends OneShotBehaviour {
         msg.setLanguage(new SLCodec().getName());
         msg.setOntology(SmartParkingsOntology.getInstance().getName());
 
-        log.debug(String.valueOf((double) reservationistRole.getDataStore().get(PRICE_IN_DOLLARS)));
-        log.debug(String.valueOf((double) reservationistRole.getDataStore().get(LATITUDE)));
-        log.debug(String.valueOf((double) reservationistRole.getDataStore().get(LONGITUDE)));
+        log.debug(String.valueOf((double) marketerRole.getDataStore().get(PRICE_IN_DOLLARS)));
+        log.debug(String.valueOf((double) marketerRole.getDataStore().get(LATITUDE)));
+        log.debug(String.valueOf((double) marketerRole.getDataStore().get(LONGITUDE)));
 
         ParkingOffer parkingOffer = new ParkingOffer();
-        parkingOffer.setPrice((double) reservationistRole.getDataStore().get(PRICE_IN_DOLLARS));
-        parkingOffer.setLat((double) reservationistRole.getDataStore().get(LATITUDE));
-        parkingOffer.setLon((double) reservationistRole.getDataStore().get(LONGITUDE));
+        parkingOffer.setPrice((double) marketerRole.getDataStore().get(PRICE_IN_DOLLARS));
+        parkingOffer.setLat((double) marketerRole.getDataStore().get(LATITUDE));
+        parkingOffer.setLon((double) marketerRole.getDataStore().get(LONGITUDE));
         try {
             getAgent().getContentManager().fillContent(msg, parkingOffer);
         } catch (Codec.CodecException | OntologyException e) {
@@ -93,10 +93,10 @@ public class StartListeningForReservation extends OneShotBehaviour {
     }
 
     private boolean bookParkingPlace(ACLMessage accept) {
-        if ((int) reservationistRole.getDataStore().get(N_OCCUPIED_PLACES) + 1 >= (int) reservationistRole.getDataStore().get(CAPACITY)) { //todo update data store before
+        if ((int) marketerRole.getDataStore().get(N_OCCUPIED_PLACES) + 1 >= (int) marketerRole.getDataStore().get(CAPACITY)) { //todo update data store before
             return false;
         } else {
-            reservationistRole.bookParkingPlace();
+            marketerRole.bookParkingPlace();
 //            parkingManagerGUI.refreshView();
             return true;
         }

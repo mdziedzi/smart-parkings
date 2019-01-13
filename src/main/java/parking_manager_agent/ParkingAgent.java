@@ -19,7 +19,7 @@ import parking_devices.ConnectionCallback;
 import parking_devices.effectors.EffectorsInterface;
 import parking_devices.sensors.SensorsInterface;
 import parking_manager_agent.behaviours.InformatorRole.InformatorRole;
-import parking_manager_agent.behaviours.ReservationRole.ReservationRole;
+import parking_manager_agent.behaviours.MarketerRole.MarketerRole;
 import parking_manager_agent.behaviours.ReservationistRole.ReservationistRole;
 import price_algorithm.PriceAlgorithm;
 
@@ -67,18 +67,13 @@ public class ParkingAgent extends GuiAgent {
         this.dataRepository.setPriceInDollars(priceAlgorithm.calculatePrice(dataRepository.getnOccupiedPlaces(),
                 dataRepository.getCapacity()));
 
-
-        // init GUI
-//        parkingManagerGUI = new ParkingManagerGUI(this);
-
         // Register the parking service in the yellow pages
         registerParkingAgentInDF();
 
-        // Add GAIA project roles as a behaviours to agent.
+        // Add GAIA project roles as a subbehaviours to agent.
         addBehaviour(new InformatorRole(this, ParallelBehaviour.WHEN_ALL));
-//        addBehaviour(new ParkingPlacesAdministratorRole(this, ParallelBehaviour.WHEN_ALL));
+        addBehaviour(new MarketerRole(this, ParallelBehaviour.WHEN_ALL));
         addBehaviour(new ReservationistRole(this, ParallelBehaviour.WHEN_ALL));
-        addBehaviour(new ReservationRole(this, ParallelBehaviour.WHEN_ALL));
     }
 
     /**

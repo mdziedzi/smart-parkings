@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ParkingManagerGUI extends JFrame implements ActionListener {
+public class ParkingGUI extends JFrame implements ActionListener {
 
     private ParkingAgent agent;
 
@@ -20,7 +20,7 @@ public class ParkingManagerGUI extends JFrame implements ActionListener {
     private JLabel lat;
     private JLabel price;
 
-    public ParkingManagerGUI(ParkingAgent parkingAgent) {
+    public ParkingGUI(ParkingAgent parkingAgent) {
 
         this.agent = parkingAgent;
 

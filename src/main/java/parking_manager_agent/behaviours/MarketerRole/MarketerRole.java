@@ -1,29 +1,30 @@
-package parking_manager_agent.behaviours.ReservationRole;
+package parking_manager_agent.behaviours.MarketerRole;
 
 import jade.core.behaviours.ParallelBehaviour;
 import parking_manager_agent.NotifiableBehaviour;
 import parking_manager_agent.ParkingAgent;
-import parking_manager_agent.behaviours.ReservationRole.subbehaviours.Reservation;
+import parking_manager_agent.behaviours.MarketerRole.subbehaviours.CalculatePrice;
+import parking_manager_agent.behaviours.MarketerRole.subbehaviours.StartListeningForOfferRequest;
 
 import static parking_manager_agent.DataStoreTypes.*;
 
-public class ReservationRole extends ParallelBehaviour implements NotifiableBehaviour {
+public class MarketerRole extends ParallelBehaviour implements NotifiableBehaviour {
 
     private final ParkingAgent parkingAgent;
 
-    public ReservationRole(ParkingAgent a, int endCondition) {
+    public MarketerRole(ParkingAgent a, int endCondition) {
         super(a, endCondition);
-        this.parkingAgent = a;
+        parkingAgent = a;
         updateDataStore();
-        this.addSubBehaviour(new Reservation(this));
+        this.addSubBehaviour(new StartListeningForOfferRequest(this));
     }
 
     private void updateDataStore() {
         getDataStore().put(PRICE_IN_DOLLARS, parkingAgent.getDataRepository().getPriceInDollars());
         getDataStore().put(LATITUDE, parkingAgent.getDataRepository().getLocalization().getLatitude());
         getDataStore().put(LONGITUDE, parkingAgent.getDataRepository().getLocalization().getLongitude());
-        getDataStore().put(CAPACITY, parkingAgent.getDataRepository().getCapacity());
         getDataStore().put(N_OCCUPIED_PLACES, parkingAgent.getDataRepository().getnOccupiedPlaces());
+        getDataStore().put(CAPACITY, parkingAgent.getDataRepository().getCapacity());
     }
 
     @Override
@@ -33,5 +34,11 @@ public class ReservationRole extends ParallelBehaviour implements NotifiableBeha
 
     public void bookParkingPlace() {
         parkingAgent.bookParkingPlace();
+        addSubBehaviour(new CalculatePrice(this));
     }
+
+    public ParkingAgent getParkingAgent() {
+        return parkingAgent;
+    }
+
 }
