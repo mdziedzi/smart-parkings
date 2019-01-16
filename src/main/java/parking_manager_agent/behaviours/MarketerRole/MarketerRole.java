@@ -32,9 +32,10 @@ public class MarketerRole extends ParallelBehaviour implements NotifiableBehavio
         updateDataStore();
     }
 
-    public void bookParkingPlace() {
-        parkingAgent.bookParkingPlace();
+    public void isBookingPermitted() {
+        parkingAgent.isBookingPermitted();
         addSubBehaviour(new CalculatePrice(this));
+
     }
 
     public ParkingAgent getParkingAgent() {

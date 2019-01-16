@@ -18,4 +18,9 @@ public class ParkingAgentWithGUI extends ParkingAgent {
     @Override
     protected void onGuiEvent(GuiEvent guiEvent) {
     }
+
+    @Override
+    protected void updateView() {
+        parkingGUI.refreshView();
+    }
 }

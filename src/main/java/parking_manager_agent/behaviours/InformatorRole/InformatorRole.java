@@ -28,5 +28,4 @@ public class InformatorRole extends ParallelBehaviour implements NotifiableBehav
     public void onDataChanged() {
         updateDataStore();
     }
-
 }

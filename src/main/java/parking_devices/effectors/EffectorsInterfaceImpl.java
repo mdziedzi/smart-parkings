@@ -12,4 +12,9 @@ public class EffectorsInterfaceImpl implements EffectorsInterface {
     public void blockParkingPlace() {
         // todo
     }
+
+    @Override
+    public void isBookingPermitted() {
+        // todo
+    }
 }

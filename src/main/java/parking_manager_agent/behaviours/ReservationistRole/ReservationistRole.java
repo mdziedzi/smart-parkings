@@ -32,6 +32,13 @@ public class ReservationistRole extends ParallelBehaviour implements NotifiableB
     }
 
     public void bookParkingPlace() {
+        parkingAgent.getDataRepository().setnOccupiedPlaces(parkingAgent.getDataRepository().getnOccupiedPlaces() + 1);
+        calculateNewPrice();
         parkingAgent.bookParkingPlace();
+    }
+
+    private void calculateNewPrice() {
+        double newPrice = parkingAgent.getPriceAlgorithm().calculatePrice((int) parkingAgent.getDataRepository().getnOccupiedPlaces(), (int) parkingAgent.getDataRepository().getCapacity());
+        parkingAgent.getDataRepository().setPriceInDollars(newPrice);
     }
 }

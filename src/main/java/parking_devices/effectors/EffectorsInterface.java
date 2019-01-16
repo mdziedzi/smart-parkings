@@ -7,4 +7,6 @@ public interface EffectorsInterface {
     void checkConnection(ConnectionCallback connectionCallback);
 
     void blockParkingPlace();
+
+    void isBookingPermitted();
 }

@@ -144,11 +144,9 @@ public class ParkingAgent extends GuiAgent {
 
     }
 
-    /**
-     * Calls EffectorsInterface and block parking place.
-     */
-    public void bookParkingPlace() { //todo czy to ma wskazywac konkretne miejsce?
-        effectorsInterface.blockParkingPlace();
+
+    public void isBookingPermitted() {
+        effectorsInterface.isBookingPermitted();
         log.debug("parking place has been blocked");
     }
 
@@ -188,5 +186,13 @@ public class ParkingAgent extends GuiAgent {
     @Override
     protected void onGuiEvent(GuiEvent guiEvent) {
 
+    }
+
+    public void bookParkingPlace() {
+        effectorsInterface.blockParkingPlace();
+        updateView();
+    }
+
+    protected void updateView() {
     }
 }

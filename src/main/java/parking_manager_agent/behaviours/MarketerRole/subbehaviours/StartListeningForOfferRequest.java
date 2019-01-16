@@ -55,7 +55,7 @@ public class StartListeningForOfferRequest extends OneShotBehaviour {
 
             protected ACLMessage prepareResultNotification(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
                 ACLMessage reply = accept.createReply();
-                if (bookParkingPlace(accept)) {
+                if (isBookingPermitted(accept)) {
                     System.out.println("Agent " + myAgent.getLocalName() + ": Proposal accepted");
                     System.out.println("Agent " + myAgent.getLocalName() + ": Action successfully performed");
                     reply.setPerformative(ACLMessage.INFORM);
@@ -92,11 +92,11 @@ public class StartListeningForOfferRequest extends OneShotBehaviour {
         }
     }
 
-    private boolean bookParkingPlace(ACLMessage accept) {
+    private boolean isBookingPermitted(ACLMessage accept) {
         if ((int) marketerRole.getDataStore().get(N_OCCUPIED_PLACES) + 1 >= (int) marketerRole.getDataStore().get(CAPACITY)) { //todo update data store before
             return false;
         } else {
-            marketerRole.bookParkingPlace();
+            marketerRole.isBookingPermitted();
 //            parkingManagerGUI.refreshView();
             return true;
         }
