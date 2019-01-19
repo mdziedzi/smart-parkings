@@ -147,7 +147,7 @@ public class ParkingAgent extends GuiAgent {
 
     public void isBookingPermitted() {
         effectorsInterface.isBookingPermitted();
-        log.debug("parking place has been blocked");
+        log.debug("isBookingPermitted");
     }
 
     @Override

@@ -100,13 +100,13 @@ public class BootAgent extends Agent {
                     e.printStackTrace();
                 }
 //
-//                // proudce DriverManagerAgents
+                // proudce DriverManagerAgents
 //                for (int i = 0; i < N_GENERATED_DRIVERS; i++) {
 //                    // new parking_manager_agent
 //                    try {
 //                        Localization localization = generateLocalization();
 //                        Object[] args = {localization};
-//                        ac = cc.createNewAgent("d" + i, "util_agents.DriverManagerAgent", args);
+//                        ac = cc.createNewAgent("d" + i, "util_agents.DriverTestAgent", args);
 //                        ac.start();
 //                    } catch (StaleProxyException e) {
 //                        e.printStackTrace();

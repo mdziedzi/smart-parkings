@@ -19,13 +19,13 @@ import parking_manager_agent.behaviours.MarketerRole.MarketerRole;
 
 import static parking_manager_agent.DataStoreTypes.*;
 
-public class StartListeningForOfferRequest extends OneShotBehaviour {
+public class Marketer extends OneShotBehaviour {
 
-    private static final Logger log = LoggerFactory.getLogger(StartListeningForOfferRequest.class);
+    private static final Logger log = LoggerFactory.getLogger(Marketer.class);
 
     private final MarketerRole marketerRole;
 
-    public StartListeningForOfferRequest(MarketerRole marketerRole) {
+    public Marketer(MarketerRole marketerRole) {
         super();
         this.marketerRole = marketerRole;
     }
@@ -93,12 +93,7 @@ public class StartListeningForOfferRequest extends OneShotBehaviour {
     }
 
     private boolean isBookingPermitted(ACLMessage accept) {
-        if ((int) marketerRole.getDataStore().get(N_OCCUPIED_PLACES) + 1 >= (int) marketerRole.getDataStore().get(CAPACITY)) { //todo update data store before
-            return false;
-        } else {
-            marketerRole.isBookingPermitted();
-//            parkingManagerGUI.refreshView();
-            return true;
-        }
+        marketerRole.isBookingPermitted();
+        return (int) marketerRole.getDataStore().get(N_OCCUPIED_PLACES) + 1 < (int) marketerRole.getDataStore().get(CAPACITY);
     }
 }

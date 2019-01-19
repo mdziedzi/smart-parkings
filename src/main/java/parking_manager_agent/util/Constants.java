@@ -2,8 +2,9 @@ package parking_manager_agent.util;
 
 public final class Constants {
 
+    public static final long REQUEST_INITIATOR_TIMEOUT = 2000;
     //Boot.class
-    public static int N_GENERATED_PARKINGS = 5;
+    public static int N_GENERATED_PARKINGS = 10;
     public static int N_GENERATED_DRIVERS = 20;
 
     public static int SLEEP_BEFORE_PARKINGS_PRODUCTION = 10;
@@ -30,7 +31,7 @@ public final class Constants {
 
     public static int MIN_CAPACITY = 10;
     public static int MAX_CAPACITY = 1;
-    public static int CAPACITY = 20;
+    public static int CAPACITY = 3;
 
     public static int MAX_OCCUPIED_PLACES = 20;
     public static int MIN_OCCUPIED_PLACES = 2;
@@ -40,7 +41,7 @@ public final class Constants {
     public static double MIN_PARKING_PRICE = 0.2;
     public static double STATIC_PARKING_PRICE = 0.2;
 
-    // DriverManagerAgent.class
+    // DriverTestAgent.class
     public static int TIMEOUT_WAITING_FOR_PARKING_REPLY = 5000;
     public static double PRICE_FACTOR = 0.1;
     public static double DISTANCE_FACTOR = 0.01;

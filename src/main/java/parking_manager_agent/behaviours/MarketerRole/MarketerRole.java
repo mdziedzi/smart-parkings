@@ -3,8 +3,7 @@ package parking_manager_agent.behaviours.MarketerRole;
 import jade.core.behaviours.ParallelBehaviour;
 import parking_manager_agent.NotifiableBehaviour;
 import parking_manager_agent.ParkingAgent;
-import parking_manager_agent.behaviours.MarketerRole.subbehaviours.CalculatePrice;
-import parking_manager_agent.behaviours.MarketerRole.subbehaviours.StartListeningForOfferRequest;
+import parking_manager_agent.behaviours.MarketerRole.subbehaviours.Marketer;
 
 import static parking_manager_agent.DataStoreTypes.*;
 
@@ -16,7 +15,7 @@ public class MarketerRole extends ParallelBehaviour implements NotifiableBehavio
         super(a, endCondition);
         parkingAgent = a;
         updateDataStore();
-        this.addSubBehaviour(new StartListeningForOfferRequest(this));
+        this.addSubBehaviour(new Marketer(this));
     }
 
     private void updateDataStore() {
@@ -34,7 +33,7 @@ public class MarketerRole extends ParallelBehaviour implements NotifiableBehavio
 
     public void isBookingPermitted() {
         parkingAgent.isBookingPermitted();
-        addSubBehaviour(new CalculatePrice(this));
+        updateDataStore();
 
     }
 

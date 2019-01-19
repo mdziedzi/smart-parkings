@@ -1,18 +1,18 @@
 package parking_manager_agent.gui;
 
-import util_agents.DriverManagerAgent;
+import util_agents.DriverTestAgent;
 
 import javax.swing.*;
 
 public class DriverManagerGUI extends JFrame {
 
-    private DriverManagerAgent agent;
+    private DriverTestAgent agent;
 
     private JPanel jPanel;
 
-    public DriverManagerGUI(DriverManagerAgent driverManagerAgent) {
+    public DriverManagerGUI(DriverTestAgent driverTestAgent) {
 
-        this.agent = driverManagerAgent;
+        this.agent = driverTestAgent;
 
         setSize(200, 200);
 

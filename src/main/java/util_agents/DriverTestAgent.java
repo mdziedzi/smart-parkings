@@ -14,10 +14,13 @@ import jade.domain.FIPANames;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
+import jade.proto.AchieveREInitiator;
 import jade.proto.ContractNetInitiator;
 import ontology.ParkingOffer;
+import ontology.ReservationRequest;
 import ontology.SmartParkingsOntology;
 import parking_manager_agent.gui.DriverManagerGUI;
+import parking_manager_agent.util.Constants;
 import parking_manager_agent.util.Localization;
 
 import java.util.Date;
@@ -26,7 +29,7 @@ import java.util.Vector;
 
 import static parking_manager_agent.util.Constants.*;
 
-public class DriverManagerAgent extends GuiAgent {
+public class DriverTestAgent extends GuiAgent {
 
     private DriverManagerGUI driverManagerGUI;
 
@@ -40,6 +43,7 @@ public class DriverManagerAgent extends GuiAgent {
 
     private Codec codec = new SLCodec();
     private Ontology ontology = SmartParkingsOntology.getInstance();
+    private AID bestParking;
 
     @Override
     protected void setup() {
@@ -51,7 +55,7 @@ public class DriverManagerAgent extends GuiAgent {
         Object[] args = getArguments();
         if (args != null) {
             if (args.length > 0) this.localization = (Localization) args[0];
-            System.out.println("Created DriverManagerAgent " + getAID().getName() + " with lat: " + this.localization.getLatitude()
+            System.out.println("Created DriverTestAgent " + getAID().getName() + " with lat: " + this.localization.getLatitude()
                     + " lon: " + this.localization.getLongitude());
         }
 
@@ -61,8 +65,8 @@ public class DriverManagerAgent extends GuiAgent {
         DFAgentDescription myTemplate = new DFAgentDescription();
         myTemplate.setName(getAID());
         ServiceDescription myServiceDescription = new ServiceDescription();
-        myServiceDescription.setType("driver-info");
-        myServiceDescription.setName("JADE-driver-info");
+        myServiceDescription.setType("DRIVER");
+        myServiceDescription.setName("DRIVER");
         myTemplate.addServices(myServiceDescription);
         try {
             DFService.register(this, myTemplate);
@@ -73,7 +77,7 @@ public class DriverManagerAgent extends GuiAgent {
         // Update list of parkings
         DFAgentDescription searchTemplate = new DFAgentDescription();
         ServiceDescription templateServiceDescription = new ServiceDescription();
-        templateServiceDescription.setType("parking-info");
+        templateServiceDescription.setType(SD_TYPE);
         searchTemplate.addServices(templateServiceDescription);
 
         DFAgentDescription[] result = new DFAgentDescription[0];
@@ -176,11 +180,59 @@ public class DriverManagerAgent extends GuiAgent {
                 if (accept != null) {
                     System.out.println("Accepting proposal " + bestProposal + " from responder " + bestProposer.getName());
                     accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+                    bestParking = bestProposer;
+                    performBooking();
                 }
             }
 
             protected void handleInform(ACLMessage inform) {
                 System.out.println("Agent " + inform.getSender().getName() + " successfully performed the requested action");
+            }
+        });
+
+
+    }
+
+    private void performBooking() {
+        // Fill the REQUEST message
+        final ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+        msg.addReceiver(bestParking);
+        msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+        msg.setReplyByDate(new Date(System.currentTimeMillis() + Constants.REQUEST_INITIATOR_TIMEOUT));
+
+        prepareMsg(msg);
+
+        addBehaviour(new AchieveREInitiator(this, msg) {
+
+            @Override
+            protected void handleAgree(ACLMessage agree) {
+                System.out.println("handleAgree: zarezerwowano");
+
+
+            }
+
+            protected void handleInform(ACLMessage inform) {
+                System.out.println("Reservation: Agent " + inform.getSender().getName() + " successfully performed the requested action");
+            }
+
+            protected void handleRefuse(ACLMessage refuse) {
+                System.out.println("Agent " + refuse.getSender().getName() + " refused to perform the requested action");
+            }
+
+            protected void handleFailure(ACLMessage failure) {
+                if (failure.getSender().equals(myAgent.getAMS())) {
+                    // FAILURE notification from the JADE runtime: the receiver
+                    // does not exist
+                    System.out.println("Responder does not exist");
+                } else {
+                    System.out.println("Agent " + failure.getSender().getName() + " failed to perform the requested action");
+                }
+            }
+
+            protected void handleAllResultNotifications(Vector notifications) {
+                System.out.println("handleAllResultNotifications: ");
+                //todo
+
             }
         });
     }
@@ -226,5 +278,18 @@ public class DriverManagerAgent extends GuiAgent {
 
     protected void onGuiEvent(GuiEvent guiEvent) {
 
+    }
+
+    private void prepareMsg(ACLMessage msg) {
+        msg.setLanguage(new SLCodec().getName());
+        msg.setOntology(SmartParkingsOntology.getInstance().getName());
+
+        ReservationRequest reservationRequest = new ReservationRequest();
+
+        try {
+            getContentManager().fillContent(msg, reservationRequest);
+        } catch (Codec.CodecException | OntologyException e) {
+            e.printStackTrace();
+        }
     }
 }
