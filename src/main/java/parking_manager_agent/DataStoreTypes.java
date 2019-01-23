@@ -1,5 +1,8 @@
 package parking_manager_agent;
 
+/**
+ * Types used in data store
+ */
 public class DataStoreTypes {
     public static final String PRICE_IN_DOLLARS = "price_in_dollars";
     public static final String LATITUDE = "latitude";

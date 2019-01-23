@@ -3,6 +3,9 @@ package parking_manager_agent;
 import jade.gui.GuiEvent;
 import parking_manager_agent.gui.ParkingGUI;
 
+/**
+ * Parking agent with gui class. Used for testing purposes. Extents simple ParkingAgent.
+ */
 public class ParkingAgentWithGUI extends ParkingAgent {
 
     private ParkingGUI parkingGUI;

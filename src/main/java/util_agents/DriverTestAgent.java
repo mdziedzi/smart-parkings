@@ -29,6 +29,9 @@ import java.util.Vector;
 
 import static parking_manager_agent.util.Constants.*;
 
+/**
+ * Agent used just for testing purposes.
+ */
 public class DriverTestAgent extends GuiAgent {
 
     private DriverManagerGUI driverManagerGUI;

@@ -1,5 +1,8 @@
 package ontology;
 
+/**
+ * Vocabulary used in project.
+ */
 public interface SmartParkingsVocabulary {
 
     // ONTOLOGY NAME

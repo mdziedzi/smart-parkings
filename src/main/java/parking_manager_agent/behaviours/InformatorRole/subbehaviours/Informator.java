@@ -18,6 +18,11 @@ import parking_manager_agent.behaviours.InformatorRole.InformatorRole;
 
 import static parking_manager_agent.DataStoreTypes.*;
 
+/**
+ * Subbehaviour of InformatorRole.
+ * It listens for specific type of message - request for info.
+ * After specific request is received it sends the current data about parking.
+ */
 public class Informator extends OneShotBehaviour {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Informator.class);
@@ -33,13 +38,13 @@ public class Informator extends OneShotBehaviour {
         System.out.println("Agent " + getAgent().getLocalName() + " waiting for requests...");
         MessageTemplate template = MessageTemplate.and(
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST), MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST), new MessageTemplate((MessageTemplate.MatchExpression) matchMsg -> {
-            ContentElement content = null;
-            try {
-                content = Informator.this.getAgent().getContentManager().extractContent(matchMsg);
-            } catch (Codec.CodecException | OntologyException e1) {
-                e1.printStackTrace();
-            }
-            return content instanceof ParkingOffer;
+                    ContentElement content = null;
+                    try {
+                        content = Informator.this.getAgent().getContentManager().extractContent(matchMsg);
+                    } catch (Codec.CodecException | OntologyException e1) {
+                        e1.printStackTrace();
+                    }
+                    return content instanceof ParkingOffer;
                 })));
 
         parentBehaviour.addSubBehaviour(new AchieveREResponder(getAgent(), template) {
@@ -72,6 +77,12 @@ public class Informator extends OneShotBehaviour {
 
     }
 
+    /**
+     * Prepares message for senging. It fill the message with the specific content.
+     *
+     * @param msg Message to fill with data.
+     * @see ParkingOffer
+     */
     private void prepareMsg(ACLMessage msg) {
         msg.setLanguage(new SLCodec().getName());
         msg.setOntology(SmartParkingsOntology.getInstance().getName());

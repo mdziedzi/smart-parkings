@@ -18,7 +18,13 @@ import java.util.Random;
 import static com.sun.activation.registries.LogSupport.log;
 import static parking_manager_agent.util.Constants.*;
 
+/**
+ * Agent used to produce agents in the project. During the initialization of the agent it produces the required arguments.
+ */
 public class BootAgent extends Agent {
+
+    private ContainerController cc;
+    private AgentController ac;
 
     protected void setup() {
         log("I'm started.");
@@ -28,100 +34,122 @@ public class BootAgent extends Agent {
             @Override
             public void action() {
 
-                ContainerController cc = getContainerController();
-                AgentController ac;
+                cc = getContainerController();
 
-                // produce ParkingManagerAgents (Mutable price)
-//                for (int i = 0; i < N_GENERATED_PARKINGS; i++) {
-//                    // new parking_manager_agent
-//                    try {
-//                        Object[] args = produceAgentArgs("mutable", "default", "default");
-//                        ac = cc.createNewAgent("pmp" + i, "parking_manager_agent.ParkingAgent", args);
-//                        ac.start();
-//
-//                        try {
-//                            Thread.sleep(SLEEP_BEFORE_PARKINGS_PRODUCTION);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                    } catch (StaleProxyException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
+//                produceParkingAgentsWithMutablePrice();
 
-                // produce ParkingManagerAgents (Constant price)
-//                for (int i = 0; i < N_GENERATED_PARKINGS; i++) {
-//                    // new parking_manager_agent
-//                    try {
-//                        Object[] args = produceAgentArgs("const", "default", "default");
-//                        ac = cc.createNewAgent("pcp" + i, "parking_manager_agent.ParkingAgent", args);
-//                        ac.start();
-//
-//                        try {
-//                            Thread.sleep(SLEEP_BEFORE_PARKINGS_PRODUCTION);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                    } catch (StaleProxyException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
+//                produceParkingAgentsWithConstantPrice();
 
-                // produce ParkingManagerAgents with GUI (Mutable price)
-                for (int i = 0; i < N_GENERATED_PARKINGS; i++) {
-                    // new parking_manager_agent
-                    try {
-                        Object[] args = produceAgentArgs("mutable", "default", "default");
-                        ac = cc.createNewAgent("pmpGUI" + i, "parking_manager_agent.ParkingAgentWithGUI", args);
-                        ac.start();
+                produceParkingAgentsWithGuiAndMutablePrice();
 
-                        try {
-                            Thread.sleep(SLEEP_BEFORE_PARKINGS_PRODUCTION);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    } catch (StaleProxyException e) {
-                        e.printStackTrace();
-                    }
-                }
+                waitForAsyncProducingOfParkings();
 
+//                createTestAgent();
 
-                // wait for asynchronous producing of Parkings
-                try {
-                    Thread.sleep(SLEEP_BEFORE_DRIVERS_PRODUCTION);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    ac = cc.createNewAgent("test", "util_agents.TestAgent", null);
-                    ac.start();
-                } catch (StaleProxyException e) {
-                    e.printStackTrace();
-                }
-//
-                // proudce DriverManagerAgents
-//                for (int i = 0; i < N_GENERATED_DRIVERS; i++) {
-//                    // new parking_manager_agent
-//                    try {
-//                        Localization localization = generateLocalization();
-//                        Object[] args = {localization};
-//                        ac = cc.createNewAgent("d" + i, "util_agents.DriverTestAgent", args);
-//                        ac.start();
-//                    } catch (StaleProxyException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    // give some time
-//                    try {
-//                        Thread.sleep(SLEEP_BETWEEN_EACH_DRIVER_PRODUCTION);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
+//                produceDriverAgents();
 
             }
         });
+    }
+
+    private void produceDriverAgents() {
+        // proudce DriverManagerAgents
+        for (int i = 0; i < N_GENERATED_DRIVERS; i++) {
+            // new parking_manager_agent
+            try {
+                Localization localization = generateLocalization();
+                Object[] args = {localization};
+                ac = cc.createNewAgent("d" + i, "util_agents.DriverTestAgent", args);
+                ac.start();
+            } catch (StaleProxyException e) {
+                e.printStackTrace();
+            }
+            // give some time
+            try {
+                Thread.sleep(SLEEP_BETWEEN_EACH_DRIVER_PRODUCTION);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private void createTestAgent() {
+        try {
+            ac = cc.createNewAgent("test", "util_agents.TestAgent", null);
+            ac.start();
+        } catch (StaleProxyException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void waitForAsyncProducingOfParkings() {
+        // wait for asynchronous producing of Parkings
+        try {
+            Thread.sleep(SLEEP_BEFORE_DRIVERS_PRODUCTION);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void produceParkingAgentsWithGuiAndMutablePrice() {
+        // produce ParkingManagerAgents with GUI (Mutable price)
+        for (int i = 0; i < N_GENERATED_PARKINGS; i++) {
+            // new parking_manager_agent
+            try {
+                Object[] args = produceAgentArgs("mutable", "default", "default");
+                ac = cc.createNewAgent("pmpGUI" + i, "parking_manager_agent.ParkingAgentWithGUI", args);
+                ac.start();
+
+                try {
+                    Thread.sleep(SLEEP_BEFORE_PARKINGS_PRODUCTION);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } catch (StaleProxyException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void produceParkingAgentsWithConstantPrice() {
+        // produce ParkingManagerAgents (Constant price)
+        for (int i = 0; i < N_GENERATED_PARKINGS; i++) {
+            // new parking_manager_agent
+            try {
+                Object[] args = produceAgentArgs("const", "default", "default");
+                ac = cc.createNewAgent("pcp" + i, "parking_manager_agent.ParkingAgent", args);
+                ac.start();
+
+                try {
+                    Thread.sleep(SLEEP_BEFORE_PARKINGS_PRODUCTION);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } catch (StaleProxyException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void produceParkingAgentsWithMutablePrice() {
+//         produce ParkingManagerAgents (Mutable price)
+        for (int i = 0; i < N_GENERATED_PARKINGS; i++) {
+            // new parking_manager_agent
+            try {
+                Object[] args = produceAgentArgs("mutable", "default", "default");
+                ac = cc.createNewAgent("pmp" + i, "parking_manager_agent.ParkingAgent", args);
+                ac.start();
+
+                try {
+                    Thread.sleep(SLEEP_BEFORE_PARKINGS_PRODUCTION);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } catch (StaleProxyException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private Object[] produceAgentArgs(String priceAlgorithmType, String sensorsInterfaceType, String effectorsInterfaceType) {
@@ -149,7 +177,6 @@ public class BootAgent extends Agent {
         return Math.floor(MIN_BASE_PRICE + rand.nextDouble() * (MAX_BASE_PRICE - MIN_BASE_PRICE) * FLOOR_FACTOR) / FLOOR_FACTOR;
     }
 
-    // todo: delete
     private int generateNumOfOccupiedPlaces() {
         return OCCUPIED_PLACES;
     }

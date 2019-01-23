@@ -19,6 +19,12 @@ import parking_manager_agent.behaviours.MarketerRole.MarketerRole;
 
 import static parking_manager_agent.DataStoreTypes.*;
 
+/**
+ * Subbehaviour of MarketerRole.
+ * It listens for specific type of message - request for parking offer.
+ * After specific request is received it sends the current offer.
+ * Communication i based on CNP. Agent do not send offer if the parking is full.
+ */
 public class Marketer extends OneShotBehaviour {
 
     private static final Logger log = LoggerFactory.getLogger(Marketer.class);
@@ -73,6 +79,12 @@ public class Marketer extends OneShotBehaviour {
         });
     }
 
+    /**
+     * Fill the message with offer data.
+     *
+     * @param msg Message to fill.
+     * @see ParkingOffer
+     */
     private void prepareProposePriceMsg(ACLMessage msg) {
         msg.setLanguage(new SLCodec().getName());
         msg.setOntology(SmartParkingsOntology.getInstance().getName());
@@ -92,6 +104,11 @@ public class Marketer extends OneShotBehaviour {
         }
     }
 
+    /**
+     * Checks if the supposed reservation is possible.
+     * @param accept Message used to make decision.
+     * @return True - if parking is permitted, if not it returns false.
+     */
     private boolean isBookingPermitted(ACLMessage accept) {
         marketerRole.isBookingPermitted();
         return (int) marketerRole.getDataStore().get(N_OCCUPIED_PLACES) + 1 < (int) marketerRole.getDataStore().get(CAPACITY);

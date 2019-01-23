@@ -1,5 +1,8 @@
 package parking_manager_agent.util;
 
+/**
+ * Model class describes geographical location in the project.
+ */
 public class Localization {
 
     private double latitude;

@@ -2,6 +2,9 @@ package parking_devices.sensors;
 
 import parking_manager_agent.util.Localization;
 
+/**
+ * Factory enables to create implementation of EffectorsInterface.
+ */
 public class SensorsInterfaceFactory {
 
     public static SensorsInterface getSensorsInterface(String type, int capacity, int nOccupiedPlaces, double priceInDollars, Localization localization) {

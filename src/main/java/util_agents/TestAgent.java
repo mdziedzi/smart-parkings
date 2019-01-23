@@ -19,6 +19,9 @@ import ontology.SmartParkingsOntology;
 
 import static parking_manager_agent.util.Constants.SD_TYPE;
 
+/**
+ * Agent used for testing purposes.
+ */
 public class TestAgent extends Agent {
 
     private AID[] parkings;

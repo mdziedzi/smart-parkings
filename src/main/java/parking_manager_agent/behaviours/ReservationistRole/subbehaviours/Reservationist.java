@@ -19,6 +19,13 @@ import parking_manager_agent.behaviours.ReservationistRole.ReservationistRole;
 import static parking_manager_agent.DataStoreTypes.CAPACITY;
 import static parking_manager_agent.DataStoreTypes.N_OCCUPIED_PLACES;
 
+/**
+ * Subbehaviour of ReservationistRole.
+ * It listens for specific type of message - request for reservation.
+ * After specific request is received it books a parking place and send confirmation.
+ * If the safeness responsibilities will be violated agent sends rejection
+ * Communication i based on Request Protocol.
+ */
 public class Reservationist extends OneShotBehaviour {
 
     private static final Logger log = LoggerFactory.getLogger(Reservationist.class);
@@ -73,28 +80,23 @@ public class Reservationist extends OneShotBehaviour {
         });
     }
 
+    /**
+     * Preforms reservation
+     */
     private void performReservation() {
         parentBehaviour.bookParkingPlace();
         //todo
     }
 
+    /**
+     * Checks if the reservation is possible - chcecks if he num of occupied price is less than capacity.
+     *
+     * @return True if the reservation is possible.
+     */
     private boolean isReservationPossible() {
         int capacity = (int) parentBehaviour.getDataStore().get(CAPACITY);
         int nOccupiedPlaces = (int) parentBehaviour.getDataStore().get(N_OCCUPIED_PLACES);
         return nOccupiedPlaces < capacity;
     }
 
-//    private void prepareMsg(ACLMessage msg) {
-//        msg.setLanguage(new SLCodec().getName());
-//        msg.setOntology(SmartParkingsOntology.getInstance().getName());
-//
-//        ReservationRequest reservationRequest = new ReservationRequest();
-//        reservationRequest.setConfirmed(true);
-//
-//        try {
-//            getAgent().getContentManager().fillContent(msg, reservationRequest);
-//        } catch (Codec.CodecException | OntologyException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

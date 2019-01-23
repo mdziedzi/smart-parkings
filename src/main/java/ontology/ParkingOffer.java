@@ -2,14 +2,26 @@ package ontology;
 
 import jade.content.AgentAction;
 
+/**
+ * Represents part of Parking Ontology.
+ * Agents uses this to understand the offer which is sent from parking to driver.
+ */
+
 public class ParkingOffer implements AgentAction {
 
-    //todo: add parking and agents IDs
-
+    /**
+     * Current price of parking place per hour. The price is in PLN.
+     */
     private double price;
 
+    /**
+     * Latitude - used for geolocation.
+     */
     private double lat;
 
+    /**
+     * Longitude - used for geolocation.
+     */
     private double lon;
 
     public double getPrice() {

@@ -4,6 +4,9 @@ import util_agents.DriverTestAgent;
 
 import javax.swing.*;
 
+/**
+ * GUI of DriverAgent. It was created only for testing purposes.
+ */
 public class DriverManagerGUI extends JFrame {
 
     private DriverTestAgent agent;

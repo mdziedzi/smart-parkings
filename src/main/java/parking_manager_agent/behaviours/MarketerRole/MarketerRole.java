@@ -7,6 +7,10 @@ import parking_manager_agent.behaviours.MarketerRole.subbehaviours.Marketer;
 
 import static parking_manager_agent.DataStoreTypes.*;
 
+/**
+ * Implementation of Gaia project role - Marketer.
+ * Marketer is responsible for giving the current offer of the parking.
+ */
 public class MarketerRole extends ParallelBehaviour implements NotifiableBehaviour {
 
     private final ParkingAgent parkingAgent;
@@ -18,8 +22,14 @@ public class MarketerRole extends ParallelBehaviour implements NotifiableBehavio
         this.addSubBehaviour(new Marketer(this));
     }
 
+    /**
+     * Updates the behaviour DataStore filling it with the values from the agent DataRepository.
+     *
+     * @see jade.core.behaviours.DataStore
+     * @see parking_manager_agent.ParkingAgentDataRepository
+     */
     private void updateDataStore() {
-        getDataStore().put(PRICE_IN_DOLLARS, parkingAgent.getDataRepository().getPriceInDollars());
+        getDataStore().put(PRICE_IN_DOLLARS, parkingAgent.getDataRepository().getPrice());
         getDataStore().put(LATITUDE, parkingAgent.getDataRepository().getLocalization().getLatitude());
         getDataStore().put(LONGITUDE, parkingAgent.getDataRepository().getLocalization().getLongitude());
         getDataStore().put(N_OCCUPIED_PLACES, parkingAgent.getDataRepository().getnOccupiedPlaces());
@@ -31,6 +41,9 @@ public class MarketerRole extends ParallelBehaviour implements NotifiableBehavio
         updateDataStore();
     }
 
+    /**
+     * Checks if the booking is permitted.
+     */
     public void isBookingPermitted() {
         parkingAgent.isBookingPermitted();
         updateDataStore();

@@ -2,20 +2,23 @@ package parking_manager_agent;
 
 import parking_manager_agent.util.Localization;
 
+/**
+ * Data repository of the parking agent. Agent can store his state such as: capacity, occupied places, price, and localization.
+ */
 public class ParkingAgentDataRepository {
 
     private int capacity;
 
     private int nOccupiedPlaces;
 
-    private double priceInDollars;
+    private double price;
 
     private Localization localization;
 
-    public ParkingAgentDataRepository(int capacity, int nOccupiedPlaces, double priceInDollars, Localization localization) {
+    public ParkingAgentDataRepository(int capacity, int nOccupiedPlaces, double price, Localization localization) {
         this.capacity = capacity;
         this.nOccupiedPlaces = nOccupiedPlaces;
-        this.priceInDollars = priceInDollars;
+        this.price = price;
         this.localization = localization;
     }
 
@@ -35,12 +38,12 @@ public class ParkingAgentDataRepository {
         this.nOccupiedPlaces = nOccupiedPlaces;
     }
 
-    public double getPriceInDollars() {
-        return priceInDollars;
+    public double getPrice() {
+        return price;
     }
 
-    public void setPriceInDollars(double priceInDollars) {
-        this.priceInDollars = priceInDollars;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public Localization getLocalization() {

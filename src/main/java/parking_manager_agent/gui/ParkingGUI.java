@@ -8,6 +8,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * GUI of parking agent. Shows the the state of parking in real time.
+ */
 public class ParkingGUI extends JFrame implements ActionListener {
 
     private ParkingAgent agent;
@@ -32,7 +35,7 @@ public class ParkingGUI extends JFrame implements ActionListener {
         numOfOccupiedPlaces = new JLabel("Num of occupied palces: " + agent.getDataRepository().getnOccupiedPlaces());
         lon = new JLabel("Lon: " + agent.getDataRepository().getLocalization().getLongitude());
         lat = new JLabel("Lat: " + agent.getDataRepository().getLocalization().getLatitude());
-        price = new JLabel("Price: " + agent.getDataRepository().getPriceInDollars() + "$");
+        price = new JLabel("Price: " + agent.getDataRepository().getPrice() + "$");
 
         jPanel.add(numOfTotalPlaces);
         jPanel.add(numOfOccupiedPlaces);
@@ -58,8 +61,11 @@ public class ParkingGUI extends JFrame implements ActionListener {
 
     }
 
+    /**
+     * Used for refresh view after the agent state has changed.
+     */
     public void refreshView() {
         numOfOccupiedPlaces.setText("Num of occupied palces: " + String.valueOf(this.agent.getDataRepository().getnOccupiedPlaces()));
-        price.setText("Price: " + String.valueOf(agent.getDataRepository().getPriceInDollars()) + "$");
+        price.setText("Price: " + String.valueOf(agent.getDataRepository().getPrice()) + "$");
     }
 }

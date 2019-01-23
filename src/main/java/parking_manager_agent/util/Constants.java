@@ -1,5 +1,8 @@
 package parking_manager_agent.util;
 
+/**
+ * Class contains all constants from the project.
+ */
 public final class Constants {
 
     public static final long REQUEST_INITIATOR_TIMEOUT = 2000;

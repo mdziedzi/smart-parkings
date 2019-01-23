@@ -3,17 +3,35 @@ package parking_devices.sensors;
 import parking_devices.ConnectionCallback;
 import parking_manager_agent.util.Localization;
 
+/**
+ * Default implementation of SensorsInterface. Simple model class.
+ */
 public class SensorsInterfaceImpl implements SensorsInterface {
 
+    /**
+     * Capacity of parking.
+     */
     private int capacity;
+
+    /**
+     * Number of occupied place on the parking.
+     */
     private int nOccupiedPlaces;
-    private double priceInDollars;
+
+    /**
+     * Price in dollars for one hour of stay.
+     */
+    private double price;
+
+    /**
+     * Localization of the parking.
+     */
     private Localization localization;
 
-    SensorsInterfaceImpl(int capacity, int nOccupiedPlaces, double priceInDollars, Localization localization) {
+    SensorsInterfaceImpl(int capacity, int nOccupiedPlaces, double price, Localization localization) {
         this.capacity = capacity;
         this.nOccupiedPlaces = nOccupiedPlaces;
-        this.priceInDollars = priceInDollars;
+        this.price = price;
         this.localization = localization;
     }
 
@@ -33,8 +51,8 @@ public class SensorsInterfaceImpl implements SensorsInterface {
     }
 
     @Override
-    public double getPriceInDollars() {
-        return priceInDollars;
+    public double getPrice() {
+        return price;
     }
 
     @Override

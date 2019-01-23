@@ -1,5 +1,8 @@
 package parking_manager_agent.util;
 
+/**
+ * Used to display properly windows with GUI of agents.
+ */
 public class WindowsCounter {
 
     private static WindowsCounter ourInstance = new WindowsCounter();

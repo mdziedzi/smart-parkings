@@ -2,19 +2,23 @@ package parking_devices.effectors;
 
 import parking_devices.ConnectionCallback;
 
+/**
+ * Default implementation of EffectorsInterface. All methods do nothing.
+ */
 public class EffectorsInterfaceImpl implements EffectorsInterface {
     @Override
     public void checkConnection(ConnectionCallback connectionCallback) {
-        // todo
+        // do nothing
     }
 
     @Override
     public void blockParkingPlace() {
-        // todo
+        // do nothing
     }
 
     @Override
-    public void isBookingPermitted() {
+    public boolean isBookingPermitted() {
         // todo
+        return true;
     }
 }

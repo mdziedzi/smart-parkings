@@ -64,7 +64,7 @@ public class ParkingAgent extends GuiAgent {
         this.dataRepository = initParkingData();
 
         // set initial price
-        this.dataRepository.setPriceInDollars(priceAlgorithm.calculatePrice(dataRepository.getnOccupiedPlaces(),
+        this.dataRepository.setPrice(priceAlgorithm.calculatePrice(dataRepository.getnOccupiedPlaces(),
                 dataRepository.getCapacity()));
 
         // Register the parking service in the yellow pages
@@ -104,7 +104,7 @@ public class ParkingAgent extends GuiAgent {
         return new ParkingAgentDataRepository(
                 sensorsInterface.getCapacity(),
                 sensorsInterface.getNOccupiedPlaces(),
-                sensorsInterface.getPriceInDollars(),
+                sensorsInterface.getPrice(),
                 sensorsInterface.getLocalization());
     }
 
@@ -180,7 +180,7 @@ public class ParkingAgent extends GuiAgent {
     }
 
     public void setNewPrice(double newPrice) {
-        dataRepository.setPriceInDollars(newPrice);
+        dataRepository.setPrice(newPrice);
     }
 
     @Override
